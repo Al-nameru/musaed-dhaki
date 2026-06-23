@@ -1,17 +1,16 @@
 {
-  "name": "tauri-app",
+  "name": "smart-assistant",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "tauri": "tauri",
-    "build:partials": "node scripts/build-partials.js",
-    "dev": "node scripts/build-partials.js && tauri dev",
-    "prebuild": "node scripts/build-partials.js",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "vitest run"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2",
+    "vite": "^5.0.0",
     "vitest": "^1.6.0",
     "jsdom": "^24.1.0"
   }

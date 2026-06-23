@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المساعد الذكي للصوت والنصوص</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="app-logo">
+          <span class="logo-icon">🤖</span>
+          <span class="logo-text">المساعد الذكي</span>
+        </div>
+      </div>
+
+      <ul class="nav-tabs" role="tablist">
+        <li>
+          <button class="nav-tab active" data-tab="home" role="tab" aria-selected="true">
+            <span class="tab-icon">🎙️</span>
+            <span class="tab-label">الصوت والنص</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-tab" data-tab="keys" role="tab">
+            <span class="tab-icon">🗝️</span>
+            <span class="tab-label">مفاتيح API</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-tab" data-tab="compare" role="tab">
+            <span class="tab-icon">⚖️</span>
+            <span class="tab-label">مقارنة النماذج</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-tab" data-tab="settings" role="tab">
+            <span class="tab-icon">⚙️</span>
+            <span class="tab-label">الإعدادات</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-tab" data-tab="alerts" role="tab">
+            <span class="tab-icon">🔔</span>
+            <span class="tab-label">التنبيهات</span>
+            <span class="badge" id="alerts-badge" style="display:none">0</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-tab" data-tab="stats" role="tab">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">الإحصائيات</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="status-indicator" id="global-status">
+          <span class="status-dot idle"></span>
+          <span class="status-text">جاهز</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- ===== TAB: HOME ===== -->
+      <section class="tab-pane active" id="tab-home" role="tabpanel">
+        <div class="tab-header home-header">
+          <h1>🎙️ الصوت والنص</h1>
+          <p>تسجيل الصوت وتحويله إلى نص مع المعالجة الذكية</p>
+        </div>
+
+        <!-- Active Model Bar -->
+        <div class="model-bar" id="model-bar">
+          <div class="model-bar-item">
+            <span class="model-bar-label">المزود</span>
+            <span class="model-bar-value" id="active-provider">Groq</span>
+          </div>
+          <div class="model-bar-sep"></div>
+          <div class="model-bar-item">
+            <span class="model-bar-label">نموذج الصوت</span>
+            <span class="model-bar-value" id="active-stt-model">whisper-large-v3</span>
+          </div>
+          <div class="model-bar-sep"></div>
+          <div class="model-bar-item">
+            <span class="model-bar-label">نموذج النص</span>
+            <span class="model-bar-value" id="active-text-model">llama-3.3-70b</span>
+          </div>
+          <div class="model-bar-sep"></div>
+          <div class="model-bar-item">
+            <span class="model-bar-label">التشكيل</span>
+            <span class="model-bar-value" id="active-diacritize-provider">Gemini</span>
+          </div>
+        </div>
+
+        <div class="home-layout">
+          <!-- Recording Panel -->
+          <div class="card recording-card">
+            <div class="card-header">
+              <h2>🎤 التسجيل</h2>
+            </div>
+            <div class="record-center">
+              <button class="record-btn idle" id="record-btn" title="اضغط للتسجيل">
+                <span class="record-icon">🎙️</span>
+                <span class="record-label">اضغط للتسجيل</span>
+              </button>
+              <div class="record-timer" id="record-timer">00:00</div>
+            </div>
+
+            <div class="processing-options">
+              <label class="toggle-item">
+                <input type="checkbox" id="opt-grammar" checked />
+                <span class="toggle-label">✍️ تصحيح قواعدي</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="opt-diacritize" />
+                <span class="toggle-label">✏️ تشكيل تلقائي</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="opt-translate" />
+                <span class="toggle-label">🌐 ترجمة تلقائية</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Text Output Panel -->
+          <div class="card text-output-card">
+            <div class="card-header">
+              <h2>📝 النص المستخرج</h2>
+              <div class="output-mode-group">
+                <button class="mode-btn active" data-mode="replace" title="استبدال">استبدال</button>
+                <button class="mode-btn" data-mode="insert" title="إدراج">إدراج</button>
+                <button class="mode-btn" data-mode="append" title="إلحاق">إلحاق</button>
+              </div>
+            </div>
+            <textarea id="result-text" class="result-textarea" placeholder="سيظهر النص المستخرج هنا..." dir="rtl" rows="8"></textarea>
+            <div class="result-toolbar">
+              <div class="result-toolbar-right">
+                <button class="btn btn-ghost" id="btn-copy" title="نسخ">📋 نسخ</button>
+                <button class="btn btn-ghost" id="btn-clear-text" title="مسح">🗑️ مسح</button>
+              </div>
+              <div class="result-toolbar-left">
+                <button class="btn btn-primary" id="btn-speak" title="قراءة بصوت عالٍ">🔊 قراءة</button>
+                <button class="btn btn-ghost" id="btn-process-text" title="معالجة النص">⚡ معالجة</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TTS Controls -->
+        <div class="card tts-card">
+          <div class="card-header">
+            <h2>🔊 إعدادات القراءة</h2>
+            <button class="btn btn-ghost btn-sm" id="tts-toggle">إخفاء ↑</button>
+          </div>
+          <div class="tts-controls" id="tts-controls">
+            <div class="tts-row">
+              <div class="form-group">
+                <label>الصوت</label>
+                <select id="tts-voice">
+                  <option value="ar-SA">عربي (المملكة)</option>
+                  <option value="ar-EG">عربي (مصر)</option>
+                  <option value="ar-KW">عربي (الكويت)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>السرعة: <span id="tts-rate-val">1.0</span>x</label>
+                <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1.0" />
+              </div>
+              <div class="form-group">
+                <label>النبرة: <span id="tts-pitch-val">1.0</span></label>
+                <input type="range" id="tts-pitch" min="0.5" max="2" step="0.1" value="1.0" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TAB: KEYS ===== -->
+      <section class="tab-pane" id="tab-keys" role="tabpanel">
+        <div class="tab-header keys-header">
+          <h1>🗝️ إدارة مفاتيح API</h1>
+          <p>أضف ومدير مفاتيح الوصول لمزودي الذكاء الاصطناعي</p>
+        </div>
+
+        <div class="keys-layout">
+          <!-- Active Key -->
+          <div class="card">
+            <div class="card-header">
+              <h2>المفتاح النشط</h2>
+              <span class="badge badge-info" id="active-key-status">غير مُتحقق</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>مفتاح API</label>
+                <div class="input-with-action">
+                  <input type="password" id="active-api-key" placeholder="sk-..." dir="ltr" />
+                  <button class="btn btn-ghost btn-sm" id="toggle-key-visibility">👁️</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>المزود</label>
+                <select id="active-provider-select">
+                  <option value="groq">Groq</option>
+                  <option value="openai">OpenAI</option>
+                  <option value="gemini">Gemini</option>
+                  <option value="anthropic">Anthropic</option>
+                  <option value="mistral">Mistral</option>
+                  <option value="deepseek">DeepSeek</option>
+                  <option value="openrouter">OpenRouter</option>
+                  <option value="xai">xAI</option>
+                </select>
+              </div>
+              <div class="form-group align-end">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary" id="btn-verify-key">✅ تحقق</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Batch Keys -->
+          <div class="card">
+            <div class="card-header">
+              <h2>📦 إضافة مفاتيح متعددة</h2>
+            </div>
+            <div class="form-group">
+              <label>الصق المفاتيح (سطر لكل مفتاح أو مفصولة بفاصلة)</label>
+              <textarea id="batch-keys-input" rows="5" placeholder="sk-abc123&#10;sk-def456&#10;AIza..." dir="ltr"></textarea>
+            </div>
+            <button class="btn btn-primary" id="btn-batch-verify">🔍 تحقق من الجميع</button>
+
+            <div class="keys-table-wrapper" id="keys-table-wrapper" style="display:none">
+              <table class="keys-table" id="keys-table">
+                <thead>
+                  <tr>
+                    <th>المفتاح</th>
+                    <th>المزود</th>
+                    <th>الحالة</th>
+                    <th>النماذج المتاحة</th>
+                    <th>إجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="keys-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Model Selection Sidebar -->
+          <div class="card">
+            <div class="card-header">
+              <h2>🎛️ اختيار النماذج</h2>
+            </div>
+            <div class="model-selectors">
+              <div class="form-group">
+                <label>🎤 نموذج تحويل الصوت إلى نص</label>
+                <select id="model-stt">
+                  <option value="whisper-large-v3">Groq: whisper-large-v3</option>
+                  <option value="whisper-large-v3-turbo">Groq: whisper-large-v3-turbo</option>
+                  <option value="distil-whisper-large-v3-en">Groq: distil-whisper (إنجليزي)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>🧠 نموذج معالجة النص</label>
+                <select id="model-text">
+                  <option value="llama-3.3-70b-versatile">Groq: llama-3.3-70b</option>
+                  <option value="gemma2-9b-it">Groq: gemma2-9b</option>
+                  <option value="gpt-4o">OpenAI: GPT-4o</option>
+                  <option value="claude-3-5-sonnet">Anthropic: Claude 3.5</option>
+                  <option value="gemini-2.0-flash">Gemini: 2.0 Flash</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>✏️ مزود التشكيل</label>
+                <select id="model-diacritize">
+                  <option value="gemini">Gemini</option>
+                  <option value="groq">Groq</option>
+                  <option value="openai">OpenAI</option>
+                  <option value="anthropic">Anthropic</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>🌐 لغة التعرف على الصوت</label>
+                <select id="speech-lang">
+                  <option value="ar">عربي</option>
+                  <option value="en">إنجليزي</option>
+                  <option value="auto">كشف تلقائي</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TAB: COMPARE ===== -->
+      <section class="tab-pane" id="tab-compare" role="tabpanel">
+        <div class="tab-header compare-header">
+          <h1>⚖️ مقارنة النماذج</h1>
+          <p>قارن ردود نماذج الذكاء الاصطناعي المختلفة على نفس السؤال</p>
+        </div>
+
+        <div class="card compare-input-card">
+          <div class="form-group">
+            <label>💬 السؤال أو الطلب</label>
+            <textarea id="compare-question" rows="4" placeholder="اكتب سؤالك أو طلبك هنا..." dir="rtl"></textarea>
+            <div class="char-counter"><span id="compare-char-count">0</span> حرف</div>
+          </div>
+
+          <div class="compare-models-selection" id="compare-models-selection">
+            <h3>النماذج المُقارَنة</h3>
+            <div class="models-grid" id="models-grid">
+              <label class="model-check-item">
+                <input type="checkbox" value="groq:llama-3.3-70b-versatile" checked />
+                <span>Groq: LLaMA 3.3 70B</span>
+              </label>
+              <label class="model-check-item">
+                <input type="checkbox" value="groq:gemma2-9b-it" />
+                <span>Groq: Gemma2 9B</span>
+              </label>
+              <label class="model-check-item">
+                <input type="checkbox" value="openai:gpt-4o" />
+                <span>OpenAI: GPT-4o</span>
+              </label>
+              <label class="model-check-item">
+                <input type="checkbox" value="openai:gpt-4o-mini" />
+                <span>OpenAI: GPT-4o Mini</span>
+              </label>
+              <label class="model-check-item">
+                <input type="checkbox" value="anthropic:claude-3-5-sonnet" />
+                <span>Anthropic: Claude 3.5</span>
+              </label>
+              <label class="model-check-item">
+                <input type="checkbox" value="gemini:gemini-2.0-flash" />
+                <span>Gemini: 2.0 Flash</span>
+              </label>
+              <label class="model-check-item">
+                <input type="checkbox" value="mistral:mistral-large" />
+                <span>Mistral: Large</span>
+              </label>
+              <label class="model-check-item">
+                <input type="checkbox" value="deepseek:deepseek-chat" />
+                <span>DeepSeek: Chat</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="compare-toolbar">
+            <button class="btn btn-primary btn-lg" id="btn-run-compare">
+              <span>▶️ تشغيل المقارنة</span>
+            </button>
+            <button class="btn btn-ghost" id="btn-clear-compare">🗑️ مسح الردود</button>
+            <div class="view-toggle">
+              <button class="view-btn active" data-view="cards" title="بطاقات">⊞ بطاقات</button>
+              <button class="view-btn" data-view="table" title="جدول">☰ جدول</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-status" id="compare-status" style="display:none">
+          <div class="spinner"></div>
+          <span id="compare-status-text">جارٍ المقارنة...</span>
+        </div>
+
+        <div class="compare-results" id="compare-results"></div>
+      </section>
+
+      <!-- ===== TAB: SETTINGS ===== -->
+      <section class="tab-pane" id="tab-settings" role="tabpanel">
+        <div class="tab-header settings-header">
+          <h1>⚙️ الإعدادات والخيارات</h1>
+          <p>تخصيص سلوك التطبيق وإعداداته</p>
+        </div>
+
+        <div class="settings-layout">
+          <!-- Settings Nav -->
+          <div class="settings-nav" id="settings-nav">
+            <button class="settings-nav-item active" data-section="general">🏠 عام</button>
+            <button class="settings-nav-item" data-section="hotkeys">⌨️ اختصارات لوحة المفاتيح</button>
+            <button class="settings-nav-item" data-section="tts-settings">🔊 النطق والأصوات</button>
+            <button class="settings-nav-item" data-section="stt-settings">🎤 التعرف على الصوت</button>
+            <button class="settings-nav-item" data-section="processing">⚡ المعالجة</button>
+            <button class="settings-nav-item" data-section="prompts">📝 الموجّهات</button>
+            <button class="settings-nav-item" data-section="security">🔒 الأمان</button>
+          </div>
+
+          <!-- Settings Content -->
+          <div class="settings-content">
+
+            <!-- General -->
+            <div class="settings-section active" id="section-general">
+              <h2>🏠 الإعدادات العامة</h2>
+              <div class="settings-overview-grid">
+                <div class="overview-card">
+                  <div class="overview-icon">🎤</div>
+                  <div class="overview-info">
+                    <h3>التعرف على الصوت</h3>
+                    <p>تحويل الكلام المسجل إلى نص باستخدام نماذج Whisper</p>
+                  </div>
+                </div>
+                <div class="overview-card">
+                  <div class="overview-icon">🧠</div>
+                  <div class="overview-info">
+                    <h3>معالجة النص</h3>
+                    <p>تصحيح قواعدي، تشكيل، ترجمة وتلخيص بالذكاء الاصطناعي</p>
+                  </div>
+                </div>
+                <div class="overview-card">
+                  <div class="overview-icon">⚖️</div>
+                  <div class="overview-info">
+                    <h3>مقارنة النماذج</h3>
+                    <p>مقارنة ردود نماذج متعددة على نفس السؤال</p>
+                  </div>
+                </div>
+                <div class="overview-card">
+                  <div class="overview-icon">🔑</div>
+                  <div class="overview-info">
+                    <h3>إدارة المفاتيح</h3>
+                    <p>إضافة والتحقق من مفاتيح API لمزودين متعددين</p>
+                  </div>
+                </div>
+                <div class="overview-card">
+                  <div class="overview-icon">🔊</div>
+                  <div class="overview-info">
+                    <h3>تحويل النص إلى كلام</h3>
+                    <p>قراءة النتائج بصوت عالٍ بلغات وأصوات متعددة</p>
+                  </div>
+                </div>
+                <div class="overview-card">
+                  <div class="overview-icon">📊</div>
+                  <div class="overview-info">
+                    <h3>إحصائيات الاستهلاك</h3>
+                    <p>تتبع استخدام الرموز والتكلفة التقريبية</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hotkeys -->
+            <div class="settings-section" id="section-hotkeys">
+              <h2>⌨️ اختصارات لوحة المفاتيح</h2>
+              <div class="card">
+                <div class="form-group">
+                  <label>اختصار التسجيل الصوتي</label>
+                  <div class="shortcut-recorder" id="shortcut-stt" data-key="stt">
+                    <span class="shortcut-display" id="shortcut-stt-display">Ctrl + Shift + 1</span>
+                    <button class="btn btn-ghost btn-sm">تغيير</button>
+                  </div>
+                  <p class="field-desc">اضغط لبدء/إيقاف التسجيل</p>
+                </div>
+                <div class="form-group">
+                  <label>اختصار أدوات النص السريعة</label>
+                  <div class="shortcut-recorder" id="shortcut-tools" data-key="tools">
+                    <span class="shortcut-display" id="shortcut-tools-display">Ctrl + Shift + 2</span>
+                    <button class="btn btn-ghost btn-sm">تغيير</button>
+                  </div>
+                  <p class="field-desc">فتح قائمة الأدوات السريعة للنص المحدد</p>
+                </div>
+                <div class="form-group">
+                  <label>سلوك زر التسجيل</label>
+                  <select id="record-behavior">
+                    <option value="toggle">ضغطة للبدء/الإيقاف</option>
+                    <option value="hold">اضغط مع الإمساك</option>
+                    <option value="double">ضغطة مزدوجة للإيقاف</option>
+                    <option value="long">ضغطة طويلة</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- TTS Settings -->
+            <div class="settings-section" id="section-tts-settings">
+              <h2>🔊 إعدادات النطق والأصوات</h2>
+              <div class="card">
+                <div class="form-group">
+                  <label>مزود النطق</label>
+                  <select id="tts-provider">
+                    <option value="web">Web Speech API (مجاني)</option>
+                    <option value="edge">Edge TTS</option>
+                    <option value="google">Google TTS</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>الصوت المُفضَّل</label>
+                  <select id="tts-default-voice">
+                    <option value="ar-SA-ZariyahNeural">زارية (عربي - المملكة)</option>
+                    <option value="ar-SA-HamedNeural">حامد (عربي - المملكة)</option>
+                    <option value="ar-EG-SalmaNeural">سلمى (عربي - مصر)</option>
+                    <option value="ar-EG-ShakirNeural">شاكر (عربي - مصر)</option>
+                    <option value="ar-KW-FahedNeural">فاهد (عربي - الكويت)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>السرعة الافتراضية: <span id="default-rate-val">1.0</span>x</label>
+                  <input type="range" id="tts-default-rate" min="0.5" max="2" step="0.1" value="1.0" />
+                </div>
+                <div class="form-group">
+                  <label>مستوى الصوت: <span id="default-volume-val">100</span>%</label>
+                  <input type="range" id="tts-default-volume" min="0" max="100" step="5" value="100" />
+                </div>
+              </div>
+            </div>
+
+            <!-- STT Settings -->
+            <div class="settings-section" id="section-stt-settings">
+              <h2>🎤 إعدادات التعرف على الصوت</h2>
+              <div class="card">
+                <div class="form-group">
+                  <label>محرك STT المجاني (Web Speech API)</label>
+                  <select id="free-stt-engine">
+                    <option value="web-speech">Google Web Speech</option>
+                    <option value="none">معطل</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="toggle-label-row">
+                    <span>النسخ اللحظي (Live Transcription)</span>
+                    <input type="checkbox" id="live-transcription" class="toggle-check" />
+                  </label>
+                  <p class="field-desc">عرض النص أثناء التحدث مباشرة</p>
+                </div>
+                <div class="form-group">
+                  <label>جودة الصوت</label>
+                  <select id="audio-quality">
+                    <option value="high">عالية (48kHz)</option>
+                    <option value="medium" selected>متوسطة (16kHz)</option>
+                    <option value="low">منخفضة (8kHz)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Processing -->
+            <div class="settings-section" id="section-processing">
+              <h2>⚡ إعدادات المعالجة</h2>
+              <div class="card">
+                <div class="form-group">
+                  <label>وجهة الإخراج</label>
+                  <select id="output-target">
+                    <option value="app">التطبيق فقط</option>
+                    <option value="external">حقل خارجي</option>
+                    <option value="both">كلاهما</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="toggle-label-row">
+                    <span>تصحيح قواعدي تلقائي</span>
+                    <input type="checkbox" id="auto-grammar" checked class="toggle-check" />
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label class="toggle-label-row">
+                    <span>تشكيل تلقائي</span>
+                    <input type="checkbox" id="auto-diacritize" class="toggle-check" />
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label class="toggle-label-row">
+                    <span>ترجمة تلقائية للصوت</span>
+                    <input type="checkbox" id="voice-translate" class="toggle-check" />
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label class="toggle-label-row">
+                    <span>محاكاة الكتابة (Simulate Typing)</span>
+                    <input type="checkbox" id="simulate-typing" class="toggle-check" />
+                  </label>
+                  <p class="field-desc">إرسال النص حرفاً حرفاً إلى الحقل الهدف</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prompts -->
+            <div class="settings-section" id="section-prompts">
+              <h2>📝 تخصيص الموجّهات</h2>
+              <div class="card">
+                <div class="form-group">
+                  <label>موجّه التصحيح القواعدي</label>
+                  <textarea rows="4" id="prompt-grammar" dir="rtl">صحح الأخطاء الإملائية والنحوية في النص التالي مع الحفاظ على المعنى الأصلي. أرسل النص المصحح فقط بدون أي تعليق:</textarea>
+                </div>
+                <div class="form-group">
+                  <label>موجّه التشكيل</label>
+                  <textarea rows="4" id="prompt-diacritize" dir="rtl">ضع تشكيلاً كاملاً ودقيقاً على النص العربي التالي مع الحفاظ على المعنى. أرسل النص المشكّل فقط:</textarea>
+                </div>
+                <div class="form-group">
+                  <label>موجّه الترجمة</label>
+                  <textarea rows="4" id="prompt-translate" dir="rtl">ترجم النص التالي إلى اللغة الإنجليزية ترجمة دقيقة وطبيعية. أرسل الترجمة فقط:</textarea>
+                </div>
+                <div class="form-group">
+                  <label>موجّه التلخيص</label>
+                  <textarea rows="4" id="prompt-summarize" dir="rtl">لخّص النص التالي بإيجاز مع الحفاظ على النقاط الرئيسية. أرسل الملخص فقط:</textarea>
+                </div>
+                <button class="btn btn-primary" id="btn-save-prompts">💾 حفظ الموجّهات</button>
+              </div>
+            </div>
+
+            <!-- Security -->
+            <div class="settings-section" id="section-security">
+              <h2>🔒 الأمان والنسخ الاحتياطي</h2>
+              <div class="card">
+                <div class="form-group">
+                  <h3>تصدير الإعدادات</h3>
+                  <p class="field-desc">تصدير جميع إعداداتك ومفاتيح API بشكل مشفر</p>
+                  <button class="btn btn-primary" id="btn-export-settings">📤 تصدير مشفّر</button>
+                </div>
+                <div class="form-group">
+                  <h3>استيراد الإعدادات</h3>
+                  <p class="field-desc">استيراد إعدادات مُصدَّرة سابقاً</p>
+                  <div class="input-with-action">
+                    <input type="file" id="import-file" accept=".json" style="display:none" />
+                    <button class="btn btn-ghost" id="btn-import-settings">📥 استيراد</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <h3>مسح جميع البيانات</h3>
+                  <p class="field-desc">حذف جميع المفاتيح والإعدادات المحفوظة</p>
+                  <button class="btn btn-danger" id="btn-clear-all">🗑️ مسح الكل</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TAB: ALERTS ===== -->
+      <section class="tab-pane" id="tab-alerts" role="tabpanel">
+        <div class="tab-header alerts-header">
+          <h1>🔔 التنبيهات والملاحظات</h1>
+          <p>سجل أحداث النظام والأخطاء</p>
+        </div>
+
+        <div class="alerts-summary">
+          <div class="summary-card error-card">
+            <div class="summary-icon">❌</div>
+            <div class="summary-info">
+              <div class="summary-count" id="count-errors">0</div>
+              <div class="summary-label">أخطاء</div>
+            </div>
+          </div>
+          <div class="summary-card warning-card">
+            <div class="summary-icon">⚠️</div>
+            <div class="summary-info">
+              <div class="summary-count" id="count-warnings">0</div>
+              <div class="summary-label">تحذيرات</div>
+            </div>
+          </div>
+          <div class="summary-card info-card">
+            <div class="summary-icon">ℹ️</div>
+            <div class="summary-info">
+              <div class="summary-count" id="count-info">0</div>
+              <div class="summary-label">معلومات</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alerts-toolbar">
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">الكل</button>
+            <button class="filter-btn" data-filter="error">أخطاء</button>
+            <button class="filter-btn" data-filter="warning">تحذيرات</button>
+            <button class="filter-btn" data-filter="info">معلومات</button>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btn-clear-alerts">🗑️ مسح السجل</button>
+        </div>
+
+        <div class="alerts-list" id="alerts-list">
+          <div class="empty-state">
+            <span class="empty-icon">🔔</span>
+            <p>لا توجد تنبيهات حتى الآن</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TAB: STATS ===== -->
+      <section class="tab-pane" id="tab-stats" role="tabpanel">
+        <div class="tab-header stats-header">
+          <h1>📊 إحصائيات الاستهلاك</h1>
+          <p>تتبع استخدام الرموز والتكلفة التقريبية</p>
+        </div>
+
+        <div class="stats-summary-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🔢</div>
+            <div class="stat-value" id="stat-total-tokens">0</div>
+            <div class="stat-label">إجمالي الرموز</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📥</div>
+            <div class="stat-value" id="stat-input-tokens">0</div>
+            <div class="stat-label">رموز الإدخال</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📤</div>
+            <div class="stat-value" id="stat-output-tokens">0</div>
+            <div class="stat-label">رموز الإخراج</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-value" id="stat-total-words">0</div>
+            <div class="stat-label">إجمالي الكلمات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔄</div>
+            <div class="stat-value" id="stat-total-requests">0</div>
+            <div class="stat-label">إجمالي الطلبات</div>
+          </div>
+          <div class="stat-card highlight-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value" id="stat-total-cost">$0.00</div>
+            <div class="stat-label">التكلفة التقريبية</div>
+          </div>
+        </div>
+
+        <div class="stats-details-grid">
+          <!-- By Provider -->
+          <div class="card">
+            <div class="card-header">
+              <h2>📡 حسب المزود</h2>
+            </div>
+            <table class="stats-table" id="stats-by-provider">
+              <thead>
+                <tr>
+                  <th>المزود</th>
+                  <th>الطلبات</th>
+                  <th>الرموز</th>
+                  <th>التكلفة</th>
+                </tr>
+              </thead>
+              <tbody id="stats-provider-body">
+                <tr><td colspan="4" class="empty-row">لا توجد بيانات</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- By Model -->
+          <div class="card">
+            <div class="card-header">
+              <h2>🤖 حسب النموذج</h2>
+            </div>
+            <table class="stats-table" id="stats-by-model">
+              <thead>
+                <tr>
+                  <th>النموذج</th>
+                  <th>الطلبات</th>
+                  <th>الرموز</th>
+                  <th>التكلفة</th>
+                </tr>
+              </thead>
+              <tbody id="stats-model-body">
+                <tr><td colspan="4" class="empty-row">لا توجد بيانات</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Operations -->
+        <div class="card">
+          <div class="card-header">
+            <h2>🕐 آخر العمليات</h2>
+            <button class="btn btn-ghost btn-sm btn-danger" id="btn-reset-stats">🗑️ إعادة تعيين</button>
+          </div>
+          <div class="operations-log" id="operations-log">
+            <div class="empty-state">
+              <span class="empty-icon">📊</span>
+              <p>لا توجد عمليات مسجلة</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Quick Tools Dialog -->
+  <div class="dialog-backdrop" id="quick-tools-backdrop" style="display:none">
+    <div class="dialog" id="quick-tools-dialog">
+      <div class="dialog-header">
+        <h2>⚡ الأدوات السريعة</h2>
+        <button class="dialog-close" id="quick-tools-close">✕</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label>النص المحدد</label>
+          <textarea id="quick-tools-input" rows="4" dir="rtl" placeholder="الصق النص هنا أو حدده في أي مكان..."></textarea>
+        </div>
+        <div class="quick-actions-grid">
+          <button class="quick-action-btn" data-action="grammar">✍️ تصحيح قواعدي</button>
+          <button class="quick-action-btn" data-action="diacritize">✏️ تشكيل</button>
+          <button class="quick-action-btn" data-action="translate">🌐 ترجمة</button>
+          <button class="quick-action-btn" data-action="summarize">📝 تلخيص</button>
+          <button class="quick-action-btn" data-action="speak">🔊 قراءة</button>
+        </div>
+        <div class="form-group" id="quick-result-group" style="display:none">
+          <label>النتيجة</label>
+          <textarea id="quick-result-text" rows="4" dir="rtl" readonly></textarea>
+          <div class="quick-result-toolbar">
+            <button class="btn btn-ghost btn-sm" id="quick-copy">📋 نسخ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
