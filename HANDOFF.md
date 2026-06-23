@@ -1,0 +1,317 @@
+# 🤝 HANDOFF
+
+> Read first at session start; resume from "Next single step".
+
+## Done & verified
+- GK initialized at tier T2.
+- `.governance/config.json` configured for legacy-safe ratchet:
+  - `hardCeiling: 5200`
+  - `softCeiling: 500`
+  - excludes temporary `target-codex-check*` folders.
+- Baseline saved with `0 errors`, `5 warnings`, `6 info`.
+- `gk check` passes with ratchet OK.
+- `gk selftest` passes: 66/66 green.
+- `cargo check` passes.
+- `node --check src/main.js` passes.
+- ADR created: `docs/adr/ADR-001-restructure-strategy.md`.
+- Project-specific restructure plan: `docs/restructure/SMART_ASSISTANT_RESTRUCTURE_PLAN.md`.
+- Generic GK rebuild guide: `docs/governance/GK_REBUILD_GUIDE.md`.
+- Phase 2 first slice completed: `usage_stats` extracted from `src-tauri/src/lib.rs` into `src-tauri/src/modules/usage_stats`.
+- Existing Tauri commands preserved: `get_token_usage_stats` and `reset_token_usage_stats`.
+- Latest verification after extraction:
+  - `cargo check`: OK.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 5 warnings, 6 info, ratchet OK.
+- Phase 3 first prep slice completed: AI default text-action prompts extracted into `src-tauri/src/modules/ai/prompts.rs`.
+- `src-tauri/src/ai_engine.rs` now uses `text_action_instruction(...)` instead of three duplicated `match action` blocks.
+- Latest verification after AI prompt extraction:
+  - `cargo check`: OK.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 5 warnings, 6 info, ratchet OK.
+- Phase 3 second prep slice completed: text provider detection moved from `src-tauri/src/lib.rs` to `src-tauri/src/modules/ai/provider_detection.rs`.
+- `src-tauri/src/lib.rs` now calls `detect_text_provider(...)` instead of owning provider-prefix/model-name rules.
+- Latest verification after provider detection extraction:
+  - `cargo check`: OK.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 5 warnings, 6 info, ratchet OK.
+- Phase 3 third prep slice completed: OpenAI-compatible chat endpoint selection moved from `src-tauri/src/ai_engine.rs` to `src-tauri/src/modules/ai/provider_detection.rs`.
+- `src-tauri/src/ai_engine.rs` now calls `chat_completions_endpoint(...)` instead of owning endpoint URL routing.
+- Latest verification after endpoint extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 5 warnings, 6 info, ratchet OK.
+- Phase 3 provider slice completed: OpenAI-compatible text processing moved from `src-tauri/src/ai_engine.rs` to `src-tauri/src/modules/ai/openai_compatible.rs`.
+- `src-tauri/src/ai_engine.rs` now delegates OpenAI/Groq/OpenRouter/xAI/DeepSeek/Mistral text processing to `openai_compatible::process_text(...)`.
+- Latest verification after OpenAI-compatible extraction:
+  - `cargo check`: OK.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 5 warnings, 6 info, ratchet OK.
+- Phase 3 provider slice completed: Anthropic text processing moved from `src-tauri/src/ai_engine.rs` to `src-tauri/src/modules/ai/anthropic.rs`.
+- `src-tauri/src/ai_engine.rs` now delegates Anthropic text processing to `anthropic::process_text(...)`.
+- Latest verification after Anthropic extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 5 warnings, 6 info, ratchet OK.
+- Phase 3 provider slice completed: Gemini text processing moved from `src-tauri/src/ai_engine.rs` to `src-tauri/src/modules/ai/gemini.rs`.
+- Gemini audio transcription remains in `src-tauri/src/ai_engine.rs` for now; only text processing moved.
+- Latest verification after Gemini text extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 5 warnings, 6 info, ratchet OK.
+- Phase 3 provider slice completed: audio transcription moved from `src-tauri/src/ai_engine.rs` to `src-tauri/src/modules/ai/transcription.rs`.
+- This moved both Groq/OpenAI multipart transcription and Gemini inline audio transcription.
+- Latest verification after transcription extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 5 warnings, 6 info, ratchet OK.
+- Phase 3 provider slice completed: API key verification moved from `src-tauri/src/ai_engine.rs` to `src-tauri/src/modules/ai/key_verification.rs`.
+- Tauri command `verify_api_key` now returns `modules::ai::key_verification::KeyVerificationResult`.
+- `src-tauri/src/ai_engine.rs` is now about 259 lines, below GK's soft ceiling; total GK warnings dropped from 5 to 4.
+- Latest verification after key verification extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 4 warnings, 6 info, ratchet OK.
+- Speech/TTS slice completed: TTS moved from `src-tauri/src/ai_engine.rs` to `src-tauri/src/modules/speech/tts.rs`.
+- `src-tauri/src/ai_engine.rs` now delegates speech synthesis to `crate::modules::speech::tts::synthesize_speech(...)`.
+- `src-tauri/src/ai_engine.rs` is now about 45 lines.
+- Latest verification after TTS extraction:
+  - `cargo check`: OK.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 4 warnings, 6 info, ratchet OK.
+- Rust shortcuts slice completed: global shortcut state and commands moved from `src-tauri/src/lib.rs` to `src-tauri/src/modules/shortcuts/mod.rs`.
+- `src-tauri/src/lib.rs` now registers shortcut commands through `modules::shortcuts` and initializes `ShortcutState::new()`.
+- `src-tauri/src/lib.rs` dropped from about 728 lines to about 682 lines.
+- Latest verification after shortcuts extraction:
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 4 warnings, 6 info, ratchet OK.
+- Follow-up `cargo check`: OK.
+- Rust selection/overlay slice completed: selection monitoring, selected-text copying, overlay commands, overlay placement/showing, and overlay window creation moved from `src-tauri/src/lib.rs` to `src-tauri/src/modules/selection/mod.rs`.
+- `src-tauri/src/lib.rs` now wires selection commands through `modules::selection` and is down to about 273 lines.
+- `src-tauri/src/lib.rs` is no longer over GK's soft ceiling; total GK warnings dropped from 4 to 3.
+- Latest verification after selection extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend first slice completed:
+  - Tauri bridge lives in `src/shared/tauriClient.js`.
+  - Alerts state/rendering lives in `src/modules/alerts/store.js`.
+  - Duplicate alerts button/filter listeners were removed from `src/main.js`; alerts wiring now goes through `initAlertsPanel(...)`.
+- Latest verification after frontend alerts cleanup:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/alerts/store.js`: OK.
+  - `node --check src/shared/tauriClient.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend stats slice completed: token usage rendering and reset wiring moved from `src/main.js` to `src/modules/stats/tokenStats.js`.
+- `src/main.js` now imports `loadTokenStats` and `setupTokenStatsReset`, and calls stats reset setup during DOM initialization.
+- Latest verification after stats extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/stats/tokenStats.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend shortcuts editor slice completed: shortcut defaults, storage, backend registration/unregistration, display refresh, shortcut recording UI, reset handling, and bare-space detection moved from `src/main.js` to `src/modules/shortcuts/editor.js`.
+- `src/main.js` still owns runtime shortcut behavior (what happens when `global-shortcut-triggered` arrives), but delegates shortcut editor/config work to the new module.
+- `src/main.js` is down to about 4341 lines.
+- Latest verification after shortcuts editor extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/shortcuts/editor.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend batch API keys slice completed: batch key parsing, row rendering, key verification, activate-key action, failed-key storage, failed-key export/recheck/clear moved from `src/main.js` to `src/modules/apiKeys/batchKeys.js`.
+- `src/main.js` now passes explicit dependencies into `setupBatchKeyVerification(...)`: active key lookup, verified-key activation, provider-key persistence, and request-id bumping.
+- `src/main.js` is down to about 4082 lines.
+- Latest verification after batch API keys extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/apiKeys/batchKeys.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend model comparison rendering slice completed: safe markdown rendering, answer/error/loading states, answer copy behavior, provider badge coloring, latency and word-count display moved from `src/main.js` to `src/modules/modelCompare/rendering.js`.
+- `src/main.js` still owns model comparison flow, columns, attachments, and API calls for now.
+- `src/main.js` is down to about 3907 lines.
+- Latest verification after model comparison rendering extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/modelCompare/rendering.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend model comparison attachments slice completed: compare attachment state, file reading, chips rendering, removal, drag/drop wiring, file input wiring, and prompt augmentation moved from `src/main.js` to `src/modules/modelCompare/attachments.js`.
+- `src/main.js` is down to about 3774 lines.
+- Latest verification after model comparison attachments extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/modelCompare/attachments.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend model comparison layout slice completed: fixed/auto/table view settings, hidden columns menu, show-hidden behavior, outside-click closing, and grid track calculation moved from `src/main.js` to `src/modules/modelCompare/layout.js`.
+- `src/main.js` is down to about 3678 lines.
+- Latest verification after model comparison layout extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/modelCompare/layout.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend model comparison columns slice completed: provider/model select filling, searchable model combo, column creation, duplicate/hide/remove/copy/retry wiring, and column option refresh moved from `src/main.js` to `src/modules/modelCompare/columns.js`.
+- `src/main.js` now delegates column creation/refresh through explicit dependencies: provider list, model list, layout update, status update, question lookup, retry runner, and attachment prompt builder.
+- `src/main.js` is down to about 3453 lines.
+- Latest verification after model comparison columns extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/modelCompare/columns.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend model comparison flow slice completed: single-column API execution, whole-comparison orchestration, fastest-answer marking, run-button busy state, and answer clearing moved from `src/main.js` to `src/modules/modelCompare/flow.js`.
+- `src/main.js` now delegates comparison execution through explicit dependencies: Tauri invoke, provider-key lookup, error formatting, question lookup, attachment prompt builder, and status updates.
+- `src/main.js` is down to about 3375 lines.
+- Latest verification after model comparison flow extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/modelCompare/flow.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend AI provider models slice completed: provider key/model localStorage parsing, provider model caching, comparison provider/model filtering, fallback text models, and active-provider key lookup moved to `src/modules/ai/providerModels.js`.
+- `src/main.js` now uses the shared provider model helpers for model comparison and diacritize model population.
+- Frontend model comparison setup slice completed: DOM lookup, initial column creation, run/add/clear listeners, layout controls, attachment controls, question counter, question lock/collapse, and Enter-to-run behavior moved to `src/modules/modelCompare/setup.js`.
+- `src/main.js` is down to about 3272 lines.
+- Latest verification after provider/setup extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/ai/providerModels.js`: OK.
+  - `node --check src/modules/modelCompare/setup.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend small shared UI/speech slices completed:
+  - Recording start/stop audio cues moved to `src/modules/speech/audioCues.js`.
+  - Result text read/write/append helpers moved to `src/modules/text/resultText.js`.
+  - Sidebar tab order restore and drag/drop reorder moved to `src/modules/navigation/sidebarOrder.js`.
+- `src/main.js` is down to about 3079 lines.
+- Latest verification after shared UI/speech extractions:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/speech/audioCues.js`: OK.
+  - `node --check src/modules/text/resultText.js`: OK.
+  - `node --check src/modules/navigation/sidebarOrder.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend TTS helper slices completed:
+  - TTS provider/voice selection helpers, language detection, timeout helper, and TTS button rendering moved to `src/modules/speech/ttsHelpers.js`.
+  - Speech synthesis voice select population moved to `src/modules/speech/ttsVoices.js`.
+- `src/main.js` is down to about 3014 lines.
+- Latest verification after TTS helper extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/speech/ttsHelpers.js`: OK.
+  - `node --check src/modules/speech/ttsVoices.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend TTS controls/playback slices completed:
+  - TTS provider/rate/pitch/volume/voice listeners and saved preference loading moved to `src/modules/speech/ttsControls.js`.
+  - Local speech synthesis and cloud audio playback moved to `src/modules/speech/ttsPlayback.js`.
+- `src/main.js` is down to about 2848 lines.
+- Latest verification after TTS controls/playback extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/speech/ttsControls.js`: OK.
+  - `node --check src/modules/speech/ttsPlayback.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend runtime shortcut slice completed: `global-shortcut-triggered` handling, STT hold/long-press/double/toggle behavior, text utilities double/long-press behavior, and duplicate pressed-event filtering moved to `src/modules/shortcuts/runtime.js`.
+- Frontend automatic text processing slice completed: duplicated auto grammar/diacritize processing after cloud transcription and Google Web Speech moved to `src/modules/ai/textProcessing.js`.
+- `src/main.js` is down to about 2696 lines.
+- Latest verification after runtime shortcut/text processing extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/shortcuts/runtime.js`: OK.
+  - `node --check src/modules/ai/textProcessing.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend quick actions slice completed: quick-action dialog config, action execution, busy/status state, copy/insert behavior, text-to-speech inside quick actions, dialog close handlers, and action button listeners moved to `src/modules/selection/quickActions.js`.
+- `src/main.js` still owns floating selection toolbar positioning and selection detection, but delegates dialog actions to `quickActions.openDialog(...)`.
+- `src/main.js` is down to about 2564 lines.
+- Latest verification after quick actions extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/selection/quickActions.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend floating selection toolbar slice completed: toolbar positioning, selected-text detection, local selection monitoring, auto-hide, overlay-action bridge, menu button wiring, outside-click hide, and selection monitor command wrapper moved to `src/modules/selection/floatingToolbar.js`.
+- `src/main.js` delegates toolbar behavior through a small `floatingSelectionToolbar` adapter and is down to about 2349 lines.
+- Latest verification after floating toolbar extraction:
+  - `cargo check`: OK. Required escalation because sandboxed Cargo hit Windows `Access is denied` in `src-tauri/target`; unsandboxed check passed.
+  - `node --check src/main.js`: OK.
+  - `node --check src/modules/selection/floatingToolbar.js`: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend settings/navigation cleanup slices completed:
+  - Text output routing and external write decisions moved to `src/modules/text/outputRouting.js`.
+  - Record button fallback binding moved to `src/modules/speech/recordButton.js`.
+  - Auto grammar/diacritize checkbox sync moved to `src/modules/ai/autoProcessingControls.js`.
+  - Prompt textarea defaults/reset moved to `src/modules/ai/promptSettings.js`.
+  - Free STT engine setup/change handling moved to `src/modules/speech/freeSttControls.js`.
+  - Text output, append mode, live transcription, and floating selection menu settings moved to `src/modules/settings/textOutputControls.js`.
+  - Shortcut behavior dropdowns moved to `src/modules/shortcuts/behaviorControls.js`.
+  - Bare-space hold-to-record runtime moved to `src/modules/shortcuts/spaceHold.js`.
+  - Provider/model settings and home/settings select mirroring moved to `src/modules/settings/providerModelControls.js`.
+  - Home indicator select rendering moved to `src/modules/settings/homeIndicators.js`.
+  - Home text/speech buttons moved to `src/modules/speech/homeSpeechActions.js`.
+  - App refresh, pagehide overlay cleanup, and sidebar collapse controls moved to `src/modules/navigation/appShellControls.js`.
+  - Active-tab refresh dispatch moved to `src/modules/navigation/activeTabRefresh.js`.
+  - Startup preferences loading moved to `src/modules/settings/startupPreferences.js`.
+- `src/main.js` is down to about 1913 lines.
+- Latest verification after settings/navigation cleanup:
+  - `cargo check`: last successful before this JS-only cleanup. Final rerun in sandbox hit Windows `Access is denied` in `src-tauri/target`; escalation was blocked by the current usage limit, so Rust was not rechecked after these frontend-only edits.
+  - `node --check src/main.js`: OK.
+  - `node --check` for the newly extracted JS modules: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+- Frontend speech/API/settings slices completed:
+  - Cloud transcription processing moved to `src/modules/speech/cloudTranscription.js`.
+  - Cloud microphone recording session state, `MediaRecorder`, audio chunks, and stop/start flow moved to `src/modules/speech/cloudRecordingSession.js`.
+  - Google Web Speech session flow moved to `src/modules/speech/webSpeechSession.js`.
+  - Google Web Speech finalization/output handling moved to `src/modules/speech/webSpeechFinalize.js`.
+  - API key verification UI/controller logic moved to `src/modules/apiKeys/verificationController.js`.
+  - Provider speech/text model selector rendering moved to `src/modules/settings/modelSelectors.js`.
+  - Diacritize config, model selector rendering, and current-text diacritize scheduler/state moved to `src/modules/ai/diacritizeControls.js`.
+  - General settings overview clone/sync UI moved to `src/modules/settings/generalOverview.js`.
+  - Main/sidebar tab activation, tab drag/reorder click guard, and Settings subnav moved to `src/modules/navigation/tabs.js`.
+  - TTS runtime selection, playback orchestration, fallback handling, voice population, and button state wrappers moved to `src/modules/speech/ttsRuntime.js`.
+  - Model comparison glue for columns, flow, layout, status, and attachments moved to `src/modules/modelCompare/controller.js`.
+  - Web Speech dependency wiring moved to `src/modules/speech/webSpeechController.js`.
+  - Runtime STT shortcut start/stop bridge moved to `src/modules/speech/sttShortcutBridge.js`.
+  - DOMContentLoaded startup wiring moved to `src/modules/settings/startupWiring.js`.
+  - Unused compatibility wrappers for API key verification, model comparison, TTS, and Web Speech were removed after confirming no local references remained.
+- `src/main.js` is down to about 964 lines.
+- Latest verification after speech/API/settings extraction:
+  - `node --check src/main.js`: OK.
+  - `node --check` for the newly extracted JS modules: OK.
+  - `gk check`: 0 errors, 3 warnings, 6 info, ratchet OK.
+  - `cargo check` not rerun for this JS-only slice because the active environment is read-only and previous sandboxed Cargo runs hit Windows `Access is denied` under `src-tauri/target`.
+- Frontend DOM/CSS/HTML size-reduction slices completed:
+  - Main DOM reference collection moved to `src/modules/settings/domRefs.js`.
+  - Initial provider/model and home speech listeners moved behind `src/modules/settings/initialDomListeners.js`.
+  - Selection quick actions plus floating toolbar wiring moved behind `src/modules/selection/toolsController.js`.
+  - Active-tab refresh wiring moved behind `src/modules/navigation/activeTabRefreshController.js`.
+  - External target capture state moved to `src/modules/text/externalTargetCapture.js`.
+  - Result text read/write/append/apply adapter moved to `src/modules/text/resultTextController.js`.
+  - DOM/partial readiness coordination added in `src/modules/navigation/appReady.js`.
+  - `src/index.html` is now a small shell that loads tab/dialog partials through `src/partialsLoader.js`.
+  - Tab/dialog markup moved into `src/partials/*.html`.
+  - `src/styles.css` is now a CSS import shell; feature styles moved into `src/styles/*` and model-compare styles split further under `src/styles/model-compare/*`.
+- Follow-up frontend runtime slices completed:
+  - App DOM initialization moved to `src/app/domRuntime.js`.
+  - Startup wiring composition moved to `src/app/startupRuntime.js`.
+  - Selection/shortcut/app-shell runtime composition moved to `src/app/frontendRuntime.js`.
+  - Active-tab refresh composition moved to `src/app/activeTabRuntime.js`.
+  - Model comparison composition moved to `src/app/modelComparisonRuntime.js`.
+  - API key DOM refs moved to `src/modules/apiKeys/domRefs.js`.
+  - Selection tool DOM refs moved to `src/modules/selection/domRefs.js`.
+  - TTS DOM refs and runtime state moved to `src/modules/speech/ttsDomRefs.js` and `src/modules/speech/ttsAppController.js`.
+  - Recording/Web Speech/cloud transcription composition moved to `src/modules/speech/recordingController.js`.
+- `src/main.js` is currently about 452 physical lines and no longer trips GK's 500-line soft ceiling.
+- Latest verification after frontend size cleanup:
+  - `node --check src/main.js`: OK.
+  - `node --check` for all JS files under `src`: OK.
+  - Partial assembly check: 7 partials loaded, 138 IDs, 0 duplicate IDs.
+  - `gk check`: 0 errors, 0 warnings, 6 info, ratchet OK.
+  - `cargo check` not rerun for this JS/HTML/CSS-only slice because previous sandboxed Cargo runs hit Windows `Access is denied` under `src-tauri/target`.
+
+## Next single step
+- With GK warnings now at zero, do a focused manual/browser smoke test of the main flows: partial loading, tabs, recording toggle, API key UI, model comparison tab, settings startup wiring, quick text tools, and TTS controls.
+
+## Landmines
+- `git config core.hooksPath scripts/hooks` failed in this sandbox because `.git/config` is not writable. Run it manually outside the sandbox if pre-commit enforcement is desired.
+- `gk check` currently has 0 warnings. Keep the ratchet green; any future split should preserve zero warnings.
+- Old implementation notes live at `docs/history/LEGACY_IMPL_LOG.md`; they are history, not the current plan.
+- Several optional GK tools are not installed: lizard, eslint, gitleaks, osv-scanner, cargo-audit, semgrep. GK reports them as visible skips.
+- OS integration code is sensitive: clipboard, keyboard simulation, global shortcuts, window focus, overlay window.
+- `cargo test` failed due Windows access-denied errors in Cargo target/incremental cache creation, not due a Rust test assertion. `cargo check` still passes.
+- Some Cargo commands may need escalation when Windows locks files under `src-tauri/target`.
+
+## Open questions
+- When should we install optional GK tools locally/global: now, or after the first module extraction?

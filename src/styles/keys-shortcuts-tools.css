@@ -1,0 +1,280 @@
+/* شارات المفاتيح وحالة الفحص */
+.input-with-status {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.status-badge {
+  position: absolute;
+  left: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+.status-badge.valid {
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  color: var(--success);
+  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--success) 20%, transparent);
+}
+.status-badge.invalid {
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: var(--danger);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--danger) 20%, transparent);
+}
+.info-row {
+  margin-top: 14px;
+  display: flex;
+  gap: 24px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.valid-status {
+  color: var(--success);
+}
+
+/* الاختصارات العالمية والتحذيرات */
+.hotkey-display {
+  display: inline-block;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  font-family: monospace;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+.info-alert {
+  background: rgba(99, 102, 241, 0.06);
+  border-right: 4px solid var(--accent);
+  color: var(--text-muted);
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* شريط الإجراءات العائم للنصوص السريعة */
+@keyframes floating-pop {
+  from { opacity: 0; transform: translateY(7px) scale(0.95); }
+  to   { opacity: 1; transform: none; }
+}
+.floating-text-menu {
+  position: fixed;
+  z-index: 9999;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  background: linear-gradient(135deg, rgba(30, 32, 48, 0.95), rgba(16, 18, 30, 0.95));
+  backdrop-filter: blur(20px) saturate(150%);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.42),
+    0 1px 5px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  border-radius: 11px;
+  display: flex;
+  flex-direction: column;
+  animation: floating-pop 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* حلقة متدرّجة أنيقة حول الشريط */
+.floating-text-menu::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(125, 139, 255, 0.85),
+    rgba(180, 120, 255, 0.4) 45%,
+    rgba(125, 139, 255, 0.12)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.floating-menu-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 4px;
+}
+.menu-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  width: 27px;
+  height: 27px;
+  padding: 0;
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.14s ease, background 0.14s ease, box-shadow 0.14s ease;
+}
+.menu-btn:hover {
+  background: linear-gradient(135deg, rgba(125, 139, 255, 0.22), rgba(180, 120, 255, 0.16));
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(125, 139, 255, 0.22);
+}
+.menu-btn:active { transform: translateY(0) scale(0.93); }
+.floating-menu-status {
+  display: none;
+}
+
+.quick-action-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(4, 6, 14, 0.58);
+  backdrop-filter: blur(8px);
+}
+
+.quick-action-dialog-backdrop[hidden] {
+  display: none;
+}
+
+.quick-action-dialog {
+  width: min(760px, 100%);
+  max-height: min(720px, calc(100vh - 40px));
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.46);
+  overflow: hidden;
+}
+
+.quick-action-dialog-header,
+.quick-action-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.quick-action-dialog-header h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+.quick-action-dialog-header p,
+.quick-action-dialog-footer span {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.quick-action-close-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.quick-action-dialog-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 16px;
+  overflow: auto;
+}
+
+.quick-action-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.quick-action-field textarea {
+  min-height: 260px;
+  resize: vertical;
+  direction: auto;
+  line-height: 1.7;
+}
+
+.quick-action-dialog-footer {
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+}
+
+.quick-action-dialog-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+  .quick-action-dialog-body {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-action-field textarea {
+    min-height: 160px;
+  }
+}
+
+/* التحريكات الرسومية */
+@keyframes pulse-glow {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+

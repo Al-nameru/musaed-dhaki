@@ -1,0 +1,4 @@
+#!/bin/sh
+# gk governance gate — keeps quality monotonic. Runs on every commit.
+# Requires gk on PATH (npm i -D gk-governance-kit, or global). Incremental = fast.
+gk check --changed || { echo "gk: commit blocked by the governance gate"; exit 1; }

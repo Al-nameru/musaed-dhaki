@@ -1,0 +1,126 @@
+        <section id="tab-home" class="tab-pane active">
+          <div class="panel-header home-panel-header">
+            <div class="home-title-block">
+              <h2>🎙️ الصوت والنص</h2>
+              <p class="subtitle">اضغط على الميكروفون للتسجيل، وسيتم كتابة النص فوراً في أي برنامج نشط</p>
+            </div>
+            <!-- معلومات النموذج والذكاء الاصطناعي النشط -->
+            <div class="active-model-indicator-bar">
+              <label class="quick-model-control quick-provider-control quick-row-one">🤖 المزود:
+                <select id="home-select-provider-company" class="quick-model-select quick-provider-select"></select>
+              </label>
+              <label class="quick-model-control quick-speech-control quick-row-one">🗣️ نموذج الصوت:
+                <select id="home-select-speech-model" class="quick-model-select quick-speech-select"></select>
+              </label>
+              <label class="quick-model-control quick-text-control quick-row-one">✍️ نموذج النصوص:
+                <select id="home-select-text-model" class="quick-model-select quick-text-select"></select>
+              </label>
+              <span id="home-diacritize-wrap" class="quick-diacritize-control quick-row-two">
+                <label class="quick-model-control">✏️ التشكيل:
+                  <select id="home-select-diacritize-provider" class="quick-model-select quick-dia-provider-select"></select>
+                  <select id="home-select-diacritize-model" class="quick-model-select quick-dia-model-select"></select>
+                </label>
+              </span>
+              <label class="quick-model-control quick-tts-control quick-row-two">🔊 خدمة النطق:
+                <select id="home-select-tts-provider" class="quick-model-select quick-tts-select"></select>
+              </label>
+            </div>
+          </div>
+
+          <div class="home-layout">
+            <div class="result-section card">
+              <div class="card-header result-toolbar">
+                <div class="result-toolbar-title">
+                  <span>النص المستخرج:</span>
+                  <button id="btn-clear-text" class="btn-clear-text" type="button">🗑️ حذف النص</button>
+                </div>
+                <div class="result-toolbar-center">
+                  <div class="mic-wrapper toolbar-mic" id="btn-record" title="بدء/إيقاف التسجيل">
+                    <div class="mic-pulse"></div>
+                    <div class="mic-button">🎙️</div>
+                  </div>
+                  <div class="status-indicator toolbar-record-status" id="record-status">جاهز للبدء</div>
+                </div>
+                <div class="result-toolbar-options">
+                  <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; color: var(--text-muted);" title="ترجمة النص تلقائياً للغة المستهدفة ونطقه فوراً">
+                    <input type="checkbox" id="chk-home-voice-translation" style="width: auto; margin: 0;" /> 🌐 ترجمة صوتية فورية
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; color: var(--text-muted);">
+                    <input type="checkbox" id="chk-home-auto-diacritize" style="width: auto; margin: 0;" /> ✏️ تشكيل تلقائي
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; color: var(--text-muted);">
+                    <input type="checkbox" id="chk-home-auto-grammar" style="width: auto; margin: 0;" /> ✍️ تدقيق إملائي
+                  </label>
+                  <div style="display: flex; align-items: center; gap: 6px; position: relative;">
+                    <span style="color: var(--text-muted); font-size: 11px;">📥 طريقة إدخال النص:</span>
+                    <div class="custom-dropdown" id="dropdown-text-insertion-mode">
+                      <button class="dropdown-trigger" type="button" title="تحديد طريقة إدخال النص الجديد في الصندوق">
+                        <span class="trigger-value">🗑️ مسح واستبدال النص السابق</span>
+                        <span class="trigger-arrow">▼</span>
+                      </button>
+                      <div class="dropdown-menu" hidden>
+                        <div class="dropdown-item active" data-value="replace">🗑️ مسح واستبدال النص السابق</div>
+                        <div class="dropdown-item" data-value="insert-cursor">✍️ إدراج عند مؤشر الكتابة</div>
+                        <div class="dropdown-item" data-value="append-space">🔗 إلحاق بجانب النص (جملة بعد جملة)</div>
+                        <div class="dropdown-item" data-value="append-newline">📑 إلحاق تحت النص (جملة تحت جملة)</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                id="result-text"
+                class="editable-result"
+                contenteditable="true"
+                role="textbox"
+                aria-multiline="true"
+                data-placeholder="سيظهر النص هنا تلقائياً..."
+                spellcheck="true"
+              ></div>
+
+              <div class="actions-row result-actions-toolbar">
+                <div class="result-actions-main">
+                  <button id="btn-copy">📋 نسخ</button>
+                  <button id="btn-pause-speak" disabled>⏸️ مؤقت</button>
+                  <button id="btn-stop-speak" disabled>⏹️ إيقاف</button>
+                  <button id="btn-download-speak" disabled>💾 تحميل</button>
+                </div>
+                <div class="result-actions-center">
+                  <button id="btn-speak" class="btn-speak-aligned">🔊 نطق</button>
+                </div>
+                <!-- التحكم السريع في خيارات النطق -->
+                <div class="result-actions-options">
+                  <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-muted);">
+                    <span>🏃 السرعة:</span>
+                    <select id="select-home-tts-rate" style="width: auto; padding: 4px 8px; font-size: 12px;">
+                      <option value="0.5">0.5x</option>
+                      <option value="0.75">0.75x</option>
+                      <option value="1.0" selected>1.0x</option>
+                      <option value="1.25">1.25x</option>
+                      <option value="1.5">1.5x</option>
+                      <option value="2.0">2.0x</option>
+                    </select>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-muted);">
+                    <span>🎵 النبرة:</span>
+                    <select id="select-home-tts-pitch" style="width: auto; padding: 4px 8px; font-size: 12px;">
+                      <option value="0.5">0.5x</option>
+                      <option value="0.75">0.75x</option>
+                      <option value="1.0" selected>1.0x</option>
+                      <option value="1.25">1.25x</option>
+                      <option value="1.5">1.5x</option>
+                      <option value="2.0">2.0x</option>
+                    </select>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-muted);">
+                    <span>🗣️ الصوت:</span>
+                    <select id="select-home-tts-voice" style="width: 140px; padding: 4px 8px; font-size: 12px;">
+                      <option value="default">الافتراضي</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>

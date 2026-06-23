@@ -1,0 +1,158 @@
+        <section id="tab-keys" class="tab-pane">
+          <div class="panel-header">
+            <h2>🗝️ إدارة مفاتيح الـ API</h2>
+            <p class="subtitle">أدخل مفتاح الـ API الخاص بـ Groq أو Gemini، وسيتم التعرف عليه وفحصه تلقائياً</p>
+          </div>
+          <div class="keys-layout">
+            <!-- القسم الأيمن (الرئيسي): إدارة وفحص المفاتيح -->
+            <div class="keys-main-content">
+              <!-- مفتاح الـ API الذكي النشط -->
+              <div class="card">
+                <div class="form-group">
+                  <label for="input-api-key">مفتاح الـ API الذكي النشط:</label>
+                  <div class="input-with-status">
+                    <input type="password" id="input-api-key" placeholder="أدخل مفتاح gsk_... أو AIzaSy..." />
+                    <span class="status-badge" id="key-status-badge">لم يتم الفحص</span>
+                  </div>
+                </div>
+                <div class="info-row" id="key-info-row" style="display:none;">
+                  <span>المزود المكتشف: <strong id="detected-provider">-</strong></span>
+                  <span>الحالة: <strong id="detected-validity" class="valid-status">-</strong></span>
+                </div>
+              </div>
+
+              <!-- فحص وفرز جماعي للمفاتيح -->
+              <div class="card">
+                <h3>📋 فحص وفرز جماعي للمفاتيح</h3>
+                <p class="subtitle" style="margin-bottom: 12px; font-size: 12.5px; color: var(--text-muted);">
+                  ألصق عدة مفاتيح (يمكنك فصلها بسطر جديد، فاصلة، أو مسافة) لفرزها واختبارها دفعة واحدة وتفعيل المفتاح المطلوب بنقرة زر:
+                </p>
+                <div class="form-group">
+                  <textarea id="textarea-batch-keys" placeholder="gsk_xxxxxxx...&#10;AIzaSyxxxxxxx..." style="height: 100px; font-family: monospace; font-size: 12px; direction: ltr; text-align: left;"></textarea>
+                </div>
+                <button id="btn-parse-batch" style="width: 100%;">🔍 تحليل وفحص المفاتيح</button>
+
+                <!-- جدول نتائج الفحص الجماعي -->
+                <div id="batch-results-container" style="display: none; width: 100%; margin-top: 16px;">
+                  <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--accent);">نتائج الفحص الجماعي:</h4>
+                  <div class="table-wrapper">
+                    <table id="table-batch-results" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 12.5px;">
+                      <thead>
+                        <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted);">
+                          <th style="padding: 10px 8px; text-align: right;">المفتاح</th>
+                          <th style="padding: 10px 8px; text-align: right;">المزود</th>
+                          <th style="padding: 10px 8px; text-align: right;">الحالة</th>
+                          <th style="padding: 10px 8px; text-align: right;">النماذج</th>
+                          <th style="padding: 10px 8px; text-align: center;">التحكم</th>
+                        </tr>
+                      </thead>
+                      <tbody id="batch-results-tbody">
+                        <!-- تعبأ ديناميكياً -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- سلة المفاتيح غير الصالحة أو التي تعذر التعرف عليها -->
+                <div id="failed-keys-container" style="display: none; margin-top: 20px; padding: 12px; border: 1px dashed var(--danger); border-radius: 8px; background: rgba(220, 53, 69, 0.05);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h4 style="font-size: 13.5px; font-weight: 700; color: var(--danger); margin: 0;">🗑️ سلة المفاتيح التالفة أو غير الصالحة:</h4>
+                    <span id="failed-keys-count" class="status-badge invalid" style="font-size: 11px; padding: 2px 6px;">0 مفاتيح</span>
+                  </div>
+                  <p class="subtitle" style="margin-bottom: 8px; font-size: 12px; color: var(--text-muted);">
+                    يتم جمع المفاتيح التي فشل التحقق منها هنا. يمكنك حفظها في ملف نصي أو إعادة فحصها لتجاوز أي مشكلات شبكة مؤقتة:
+                  </p>
+                  <div class="form-group">
+                    <textarea id="textarea-failed-keys" readonly style="height: 80px; font-family: monospace; font-size: 12px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: #ff8888; width: 100%; box-sizing: border-box; resize: vertical; padding: 8px;" placeholder="لا يوجد مفاتيح تالفة حالياً..."></textarea>
+                  </div>
+                  <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <button id="btn-export-failed" style="flex: 1; padding: 6px 12px; font-size: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text); cursor: pointer; border-radius: 4px;">💾 حفظ في ملف نصي</button>
+                    <button id="btn-recheck-failed" style="flex: 1; padding: 6px 12px; font-size: 12px; background: var(--accent); border: none; color: white; cursor: pointer; border-radius: 4px;">🔄 إعادة فحص هذه المفاتيح</button>
+                    <button id="btn-clear-failed" style="padding: 6px 12px; font-size: 12px; background: rgba(220, 53, 69, 0.2); border: 1px solid var(--danger); color: #ff8888; cursor: pointer; border-radius: 4px;">🗑️ تفريغ</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- القسم الأيسر (الجانبي): تخصيص النماذج -->
+            <div class="keys-sidebar">
+              <div class="card" id="models-card">
+                <h3>🤖 تخصيص النماذج البرمجية</h3>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                  <label for="select-provider-company" style="display: block; margin-bottom: 8px; font-size: 12.5px;">الشركة المزودة (AI Provider):</label>
+                  <select id="select-provider-company">
+                    <option value="">-- اختر الشركة --</option>
+                    <option value="Google">Google Web Speech (مجاني)</option>
+                    <option value="Groq">Groq</option>
+                    <option value="Gemini">Gemini</option>
+                    <option value="OpenAI">OpenAI</option>
+                    <option value="Mistral">Mistral</option>
+                    <option value="Anthropic">Anthropic</option>
+                    <option value="DeepSeek">DeepSeek</option>
+                    <option value="OpenRouter">OpenRouter</option>
+                    <option value="xAI">xAI</option>
+                  </select>
+                </div>
+
+                <div id="models-selectors-container" style="display: none;">
+                  <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="select-speech-model" style="display: block; margin-bottom: 8px; font-size: 12.5px;">نموذج تحويل الصوت إلى نص (Speech-to-Text):</label>
+                    <select id="select-speech-model">
+                      <!-- تعبأ ديناميكياً -->
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="select-speech-language" style="display: block; margin-bottom: 8px; font-size: 12.5px;">لغة الكلام (Spoken Language):</label>
+                    <select id="select-speech-language">
+                      <option value="ar" selected>العربية (Arabic)</option>
+                      <option value="en">الإنجليزية (English)</option>
+                      <option value="auto">كشف تلقائي (Auto-Detect)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="select-text-model" style="display: block; margin-bottom: 8px; font-size: 12.5px;">نموذج معالجة وتدقيق النصوص (Text API):</label>
+                    <select id="select-text-model">
+                      <!-- تعبأ ديناميكياً -->
+                    </select>
+                  </div>
+                </div>
+
+                <div id="models-no-key-warning" style="display: block; padding: 10px; border: 1px dashed var(--border); border-radius: 6px; font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 10px;">
+                  ⚠️ يرجى إدخال وتفعيل مفتاح الـ API الخاص بالشركة المحددة لتخصيص النماذج.
+                </div>
+
+                <!-- نموذج تشكيل النص العربي (مستقل عن مزوّد النصوص العام) -->
+                <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px;">
+                  <div style="font-weight: 700; color: #ffb86c; font-size: 13.5px; margin-bottom: 8px;">✏️ نموذج تشكيل النص العربي (مستقل)</div>
+                  <p class="subtitle" style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5;">
+                    اختر شركة ونموذجاً مخصّصين لعملية التشكيل بمعزل عن مزوّد النصوص العام. اتركه على «نفس مزوّد النصوص» لاستخدام الإعداد العام. (تتطلب الشركة المختارة مفتاح API مفعّلاً)
+                  </p>
+                  <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="select-diacritize-provider" style="display: block; margin-bottom: 8px; font-size: 12.5px;">الشركة المزودة للتشكيل:</label>
+                    <select id="select-diacritize-provider">
+                      <option value="">-- نفس مزوّد النصوص العام --</option>
+                      <option value="Groq">Groq</option>
+                      <option value="Gemini">Gemini</option>
+                      <option value="OpenAI">OpenAI</option>
+                      <option value="Mistral">Mistral</option>
+                      <option value="Anthropic">Anthropic</option>
+                      <option value="DeepSeek">DeepSeek</option>
+                      <option value="OpenRouter">OpenRouter</option>
+                      <option value="xAI">xAI</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="select-diacritize-model" style="display: block; margin-bottom: 8px; font-size: 12.5px;">نموذج التشكيل:</label>
+                    <select id="select-diacritize-model">
+                      <!-- تعبأ ديناميكياً -->
+                    </select>
+                  </div>
+                  <div id="diacritize-no-key-warning" style="display: none; padding: 10px; border: 1px dashed var(--danger); border-radius: 6px; font-size: 12px; color: #ff8888; text-align: center; margin-top: 10px;">
+                    ⚠️ لا يوجد مفتاح API مفعّل للشركة المختارة للتشكيل — سيُستخدم مزوّد النصوص العام إلى أن تُضيف مفتاحاً لها.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>

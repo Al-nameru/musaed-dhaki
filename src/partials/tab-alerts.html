@@ -1,0 +1,49 @@
+        <section id="tab-alerts" class="tab-pane">
+          <div class="panel-header">
+            <h2>🔔 التنبيهات والملاحظات</h2>
+            <p class="subtitle">سجل الأخطاء والتنبيهات والأحداث المهمة التي تحدث أثناء استخدام التطبيق</p>
+          </div>
+
+          <div class="alerts-dashboard">
+            <div class="alerts-summary-grid">
+              <div class="card alert-summary-card">
+                <span class="alert-summary-icon error">⛔</span>
+                <div>
+                  <span class="stat-label">الأخطاء</span>
+                  <strong class="stat-value" id="alerts-error-count">0</strong>
+                </div>
+              </div>
+              <div class="card alert-summary-card">
+                <span class="alert-summary-icon warning">⚠️</span>
+                <div>
+                  <span class="stat-label">التنبيهات</span>
+                  <strong class="stat-value" id="alerts-warning-count">0</strong>
+                </div>
+              </div>
+              <div class="card alert-summary-card">
+                <span class="alert-summary-icon info">ℹ️</span>
+                <div>
+                  <span class="stat-label">الأحداث</span>
+                  <strong class="stat-value" id="alerts-info-count">0</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="card alerts-panel">
+              <div class="alerts-toolbar">
+                <div class="alerts-filter-group" role="group" aria-label="تصفية التنبيهات">
+                  <button class="alerts-filter-btn active" data-alert-filter="all" type="button">الكل</button>
+                  <button class="alerts-filter-btn" data-alert-filter="error" type="button">الأخطاء</button>
+                  <button class="alerts-filter-btn" data-alert-filter="warning" type="button">التنبيهات</button>
+                  <button class="alerts-filter-btn" data-alert-filter="info" type="button">الأحداث</button>
+                </div>
+                <button id="btn-clear-alerts" class="btn-clear-text" type="button">🗑️ مسح السجل</button>
+              </div>
+
+              <div id="alerts-empty-state" class="alerts-empty-state">
+                لا توجد تنبيهات مسجلة حالياً.
+              </div>
+              <div id="alerts-list" class="alerts-list" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>

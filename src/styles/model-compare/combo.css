@@ -1,0 +1,54 @@
+/* صندوق بحث النماذج المنسدل (combobox) */
+.mc-combo { position: relative; width: 100%; min-width: 0; }
+.mc-combo-native { display: none !important; }
+.mc-combo-input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--text);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.mc-combo-input::placeholder { color: var(--text-muted); }
+.mc-combo-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.mc-combo-list {
+  position: absolute;
+  left: 0;
+  width: 280px;
+  top: calc(100% + 4px);
+  z-index: 50;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+  padding: 4px;
+}
+.mc-combo-option {
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mc-combo-option:hover,
+.mc-combo-option.is-active { background: var(--surface-2); }
+.mc-combo-option.is-current { color: var(--accent); font-weight: 700; }
+.mc-combo-empty {
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .model-compare-selects { grid-template-columns: 1fr; }
+}
+

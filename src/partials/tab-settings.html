@@ -1,0 +1,357 @@
+        <section id="tab-settings" class="tab-pane">
+          <div class="panel-header">
+            <h2>⚙️ خيارات التطبيق والجدولة</h2>
+            <p class="subtitle">تخصيص الاختصارات وسلوك النطق وتشغيل النظام</p>
+          </div>
+          <div class="settings-workspace">
+            <aside class="settings-subnav" aria-label="أقسام الإعدادات">
+              <button class="settings-subnav-item active" data-settings-panel="settings-general">
+                <span class="settings-subnav-icon">🌐</span>
+                <span class="settings-subnav-text">
+                  <strong>الإعدادات العامة</strong>
+                  <small>كل الخيارات في صفحة واحدة</small>
+                </span>
+              </button>
+              <button class="settings-subnav-item" data-settings-panel="settings-hotkeys">
+                <span class="settings-subnav-icon">⌨️</span>
+                <span class="settings-subnav-text">
+                  <strong>الاختصارات</strong>
+                  <small>مفاتيح التسجيل والأدوات</small>
+                </span>
+              </button>
+              <button class="settings-subnav-item" data-settings-panel="settings-tts">
+                <span class="settings-subnav-icon">🔊</span>
+                <span class="settings-subnav-text">
+                  <strong>النطق</strong>
+                  <small>الصوت والسرعة والحجم</small>
+                </span>
+              </button>
+              <button class="settings-subnav-item" data-settings-panel="settings-local">
+                <span class="settings-subnav-icon">🤖</span>
+                <span class="settings-subnav-text">
+                  <strong>النماذج المحلية</strong>
+                  <small>خيارات التشغيل دون اتصال</small>
+                </span>
+              </button>
+              <button class="settings-subnav-item" data-settings-panel="settings-free-stt">
+                <span class="settings-subnav-icon">🎙️</span>
+                <span class="settings-subnav-text">
+                  <strong>محركات الصوت</strong>
+                  <small>تحويل الصوت إلى نص</small>
+                </span>
+              </button>
+              <button class="settings-subnav-item" data-settings-panel="settings-processing">
+                <span class="settings-subnav-icon">⚙️</span>
+                <span class="settings-subnav-text">
+                  <strong>المعالجة</strong>
+                  <small>التشكيل والتصحيح والسلوك</small>
+                </span>
+              </button>
+              <button class="settings-subnav-item" data-settings-panel="settings-prompts">
+                <span class="settings-subnav-icon">✍️</span>
+                <span class="settings-subnav-text">
+                  <strong>البرومبت</strong>
+                  <small>توجيهات الذكاء الاصطناعي</small>
+                </span>
+              </button>
+              <button class="settings-subnav-item" data-settings-panel="settings-security">
+                <span class="settings-subnav-icon">🔒</span>
+                <span class="settings-subnav-text">
+                  <strong>النسخ الاحتياطي والأمن</strong>
+                  <small>حفظ الإعدادات وتشفير البيانات</small>
+                </span>
+              </button>
+            </aside>
+            <div class="settings-panel-view">
+          <div class="card settings-panel active" id="settings-general">
+            <h3>🌐 إعدادات عامة</h3>
+            <p>يعرض هذا القسم عرضاً شاملاً لجميع إعدادات الصفحة دون تخصيص لمجال واحد فقط. يمكنك الوصول إلى الضبط العام لمزيد من التحكم في سلوك التطبيق وسهولة التخصيص.</p>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="info-alert">
+                هذا التبويب يجمع رؤية عامة لجميع الإعدادات المتاحة داخل صفحة الإعدادات، بما في ذلك:
+                <ul style="margin-top: 10px; padding-inline-start: 20px; color: var(--text-muted); font-size: 13px;">
+                  <li>⌨️ الاختصارات العالمية</li>
+                  <li>🔊 إعدادات النطق وصوت القارئ</li>
+                  <li>🤖 إعدادات النماذج المحلية</li>
+                  <li>🎙️ محركات تحويل الصوت إلى نص</li>
+                  <li>⚙️ سلوك معالجة النصوص</li>
+                  <li>✍️ تخصيص التوجيهات والبرومبت</li>
+                </ul>
+              </div>
+              <div class="card" style="background: rgba(255,255,255,0.03); padding: 16px;">
+                <h4 style="margin-bottom: 10px;">كيف تستخدم هذا التبويب</h4>
+                <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                  هذا القسم مخصّص لعرض الإعدادات العامة في مكان واحد وتسريع التنقل بينها. إذا أردت تعديل إعداد محدد، انتقل إلى التبويب الخاص به أو استعرض المحتوى المباشر في هذه الصفحة.
+                </p>
+              </div>
+            </div>
+            <div id="settings-general-contents" class="settings-general-contents" style="margin-top: 20px; display: flex; flex-direction: column; gap: 20px;"></div>
+          </div>
+          <div class="card settings-panel" id="settings-hotkeys">
+            <h3>⌨️ الاختصارات العالمية (Global Hotkeys)</h3>
+            <div class="info-alert">تتيح لك هذه الاختصارات تشغيل المساعد في أي وقت بالخلفية. اختر الاختصارات المفضلة لديك ثم اضغط حفظ:</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <!-- اختصار تسجيل الصوت -->
+              <div class="shortcut-editor-box" style="border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                <label style="font-weight: 700; font-size: 13.5px; display: block; margin-bottom: 8px;">🎙️ اختصار تسجيل الصوت ولصقه:</label>
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px;">
+                  <button id="btn-record-stt-shortcut" class="shortcut-recorder-btn btn-record-stt-shortcut-class" title="انقر لتعديل هذا الاختصار" style="min-width: 220px; text-align: center; padding: 10px; background: var(--surface-2); border: 1px dashed var(--accent); color: var(--text); border-radius: 8px; font-family: monospace; font-size: 13.5px; cursor: pointer; transition: all 0.2s;">
+                    Ctrl + Shift + 1
+                  </button>
+                  <button id="btn-reset-stt-shortcut" type="button" class="shortcut-reset-btn" style="padding: 8px 10px; font-size: 12px;">استعادة الافتراضي</button>
+                  <span style="font-size: 12px; color: var(--text-muted);">يدعم زرًا واحدًا أو تركيبة من Ctrl / Shift / Alt مع زر آخر</span>
+                </div>
+                <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+                  الاختصار النشط حالياً: <strong id="lbl-active-stt-shortcut" class="lbl-active-stt-shortcut-class" style="color: #6edcff;">Ctrl + Shift + 1</strong>
+                </div>
+                <div style="margin-top: 10px;">
+                  <label for="select-stt-shortcut-behavior" style="font-weight: 600; font-size: 13px; display: block; margin-bottom: 6px;">⚙️ سلوك زر اختصار التسجيل:</label>
+                  <select id="select-stt-shortcut-behavior" style="width: 100%; max-width: 300px; padding: 6px 12px; font-size: 13px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);">
+                    <option value="toggle">🖱️ بدون سلوك خاص: نقرة واحدة للبدء / الإيقاف</option>
+                    <option value="hold">🎙️ ضغط مستمر: يسجل أثناء الضغط فقط</option>
+                    <option value="double">⚡ نقرتان: بدء التسجيل، ونقرة للإيقاف</option>
+                    <option value="long_press_start">🔘 ضغط مطول: يبدأ بعد الضغط المطول، ونقرة للإيقاف</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- اختصار شريط الأدوات -->
+              <div class="shortcut-editor-box">
+                <label style="font-weight: 700; font-size: 13.5px; display: block; margin-bottom: 8px;">📋 اختصار شريط أدوات النصوص السريعة:</label>
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px;">
+                  <button id="btn-record-text-shortcut" class="shortcut-recorder-btn btn-record-text-shortcut-class" title="انقر لتعديل هذا الاختصار" style="min-width: 220px; text-align: center; padding: 10px; background: var(--surface-2); border: 1px dashed var(--accent); color: var(--text); border-radius: 8px; font-family: monospace; font-size: 13.5px; cursor: pointer; transition: all 0.2s;">
+                    Ctrl + Shift + 2
+                  </button>
+                  <button id="btn-reset-text-shortcut" type="button" class="shortcut-reset-btn" style="padding: 8px 10px; font-size: 12px;">استعادة الافتراضي</button>
+                  <span style="font-size: 12px; color: var(--text-muted);">يمكن استخدام زر واحد أو تركيبة من زرين أو ثلاثة أو أربعة</span>
+                </div>
+                <div style="font-size: 12.5px; color: var(--text-muted);">
+                  الاختصار النشط حالياً: <strong id="lbl-active-text-shortcut" class="lbl-active-text-shortcut-class" style="color: #bc85ff;">Ctrl + Shift + 2</strong>
+                </div>
+                <div style="margin-top: 10px;">
+                  <label for="select-text-shortcut-behavior" style="font-weight: 600; font-size: 13px; display: block; margin-bottom: 6px;">⚙️ سلوك اختصار شريط الأدوات:</label>
+                  <select id="select-text-shortcut-behavior" style="width: 100%; max-width: 300px; padding: 6px 12px; font-size: 13px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);">
+                    <option value="single">🖱️ بدون سلوك خاص: نقرة واحدة لفتح الشريط</option>
+                    <option value="double">⚡ نقرتان: فتح الشريط</option>
+                    <option value="long_press">🔘 ضغط مطول: فتح الشريط</option>
+                    <option value="disabled">🚫 معطّل: إيقاف الاختصار العام وتحرير التركيبة للنظام</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card settings-panel" id="settings-tts">
+            <h3>🔊 خيارات نطق النصوص (Text-to-Speech)</h3>
+            <div class="form-group">
+              <label for="select-tts-provider">مزود النطق المفضل:</label>
+              <select id="select-tts-provider">
+                <option value="edge">Microsoft Edge TTS (سحابي عصبي)</option>
+                <option value="google">Google Translate TTS (سحابي)</option>
+                <option value="sapi5">Microsoft SAPI5 (محلي بدون إنترنت)</option>
+                <option value="piper" disabled>Piper Smart TTS (قريباً ⏳)</option>
+              </select>
+            </div>
+            
+            <div class="form-group" style="margin-top: 15px;">
+              <label for="slider-tts-rate" style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span>🏃 سرعة النطق:</span>
+                <strong id="display-tts-rate" style="color: var(--accent);">1.0x</strong>
+              </label>
+              <input type="range" id="slider-tts-rate" min="0.5" max="2.0" step="0.1" value="1.0" style="width: 100%; accent-color: var(--accent); margin-top: 8px;" />
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+              <label for="slider-tts-pitch" style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span>🎵 حدة الصوت (النبرة):</span>
+                <strong id="display-tts-pitch" style="color: var(--accent);">1.0x</strong>
+              </label>
+              <input type="range" id="slider-tts-pitch" min="0.5" max="2.0" step="0.1" value="1.0" style="width: 100%; accent-color: var(--accent); margin-top: 8px;" />
+            </div>
+            
+            <div class="form-group" style="margin-top: 15px;">
+              <label for="slider-tts-volume" style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span>🔊 حجم الصوت:</span>
+                <strong id="display-tts-volume" style="color: var(--accent);">100%</strong>
+              </label>
+              <input type="range" id="slider-tts-volume" min="0" max="100" step="5" value="100" style="width: 100%; accent-color: var(--accent); margin-top: 8px;" />
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+              <label for="select-tts-voice">🗣️ اختيار صوت النظام (لقارئ SAPI5):</label>
+              <select id="select-tts-voice" style="width: 100%; margin-top: 8px;">
+                <option value="default">صوت النظام الافتراضي</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card settings-panel" id="settings-local">
+            <h3>🤖 تكامل النماذج المحلية (Local Offline Models)</h3>
+            <div class="info-alert">هذه الميزات معطلة حالياً وسيتم تنشيطها في المستقبل عند الحاجة لتوفير تشغيل محلي 100% بدون إنترنت وبخصوصية تامة:</div>
+            <div class="form-group">
+              <label>نموذج STT محلي (Speech-to-Text):</label>
+              <select disabled>
+                <option value="whisper-local-onnx">Whisper-Base ONNX (محلي - قريباً ⏳)</option>
+                <option value="whisper-local-cpp">Whisper.cpp (محلي - قريباً ⏳)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>نموذج ذكاء محلي (LLM):</label>
+              <select disabled>
+                <option value="llama-cpp-local">Llama 3 8B via llama.cpp (محلي - قريباً ⏳)</option>
+                <option value="ollama-local">Ollama Local API (محلي - قريباً ⏳)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card settings-panel" id="settings-free-stt">
+            <h3>🎙️ محركات تحويل الصوت إلى نص المجانية (Free Speech-to-Text)</h3>
+            <div class="info-alert">تتيح لك هذه المحركات تحويل الصوت إلى نص مجاناً بالكامل وبدون الحاجة لإدخال أي مفاتيح API مدفوعة:</div>
+            <div class="form-group">
+              <label for="select-free-stt-engine">المحرك المجاني النشط:</label>
+              <select id="select-free-stt-engine">
+                <option value="none" selected>-- استخدام نماذج الذكاء الاصطناعي السحابية (Groq / Gemini) --</option>
+                <option value="google-webspeech">Google WebSpeech API (سحابي مدمج مجاني بالكامل)</option>
+                <option value="whisper-cpp-local" disabled>Whisper.cpp Local Engine (محلي مجاني - قريباً ⏳)</option>
+                <option value="vosk-local" disabled>Vosk STT Engine (محلي مجاني - قريباً ⏳)</option>
+              </select>
+            </div>
+            <div id="free-stt-status-msg" style="font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.4; display: none;">
+              ℹ️ عند تفعيل المحرك المجاني، سيتم استخدامه مباشرة للتسجيل بدلاً من خوادم الذكاء الاصطناعي المحددة في التبويبات الأخرى.
+            </div>
+            <div class="checkbox-group" style="margin-top: 12px;">
+              <label>
+                <input type="checkbox" id="chk-live-transcription" />
+                تفعيل التدوين المباشر أثناء الاستماع (إظهار النص فور نطقه قبل إيقاف التسجيل)
+              </label>
+            </div>
+          </div>
+
+          <div class="card settings-panel" id="settings-processing">
+            <h3>⚙️ التشغيل وسلوك معالجة النصوص</h3>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="checkbox-group">
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13.5px; cursor: pointer;">
+                  <input type="checkbox" id="chk-background-recording" style="cursor: pointer;" />
+                  🤫 استخدام نفس أسلوب الإملاء المباشر لزر التسجيل داخل التطبيق (الاختصار يعمل دائماً مباشرة في النافذة النشطة)
+                </label>
+              </div>
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" id="chk-simulate-typing" />
+                  محاكاة كتابة الحروف حرفاً بحرف (بدلاً من اللصق السريع عبر الحافظة)
+                </label>
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label for="select-output-target" style="font-weight: 700; font-size: 13px;">وجهة النص بعد التحويل:</label>
+                <select id="select-output-target" style="margin-top: 6px;">
+                  <option value="both">صندوق التطبيق والنافذة النشطة الخارجية معاً</option>
+                  <option value="external">النافذة النشطة الخارجية فقط</option>
+                  <option value="app">صندوق التطبيق فقط</option>
+                </select>
+              </div>
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" id="chk-selection-floating-menu" />
+                  إظهار شريط إجراءات النصوص السريعة تلقائياً عند تظليل النص داخل التطبيق أو خارجه
+                </label>
+              </div>
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" id="chk-settings-auto-diacritize" />
+                  تشكيل النصوص العربية تلقائياً بالحركات فور استخلاصها من الصوت
+                </label>
+              </div>
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" id="chk-settings-auto-grammar" />
+                  تدقيق وتصحيح النصوص إملائياً ولغوياً تلقائياً بعد التسجيل (لكافة اللغات)
+                </label>
+              </div>
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" id="chk-settings-voice-translation" />
+                  ترجمة النصوص المستخلصة من الصوت تلقائياً للغة المستهدفة ونطقها صوتياً فوراً ( Voice Translation )
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="card settings-panel" id="settings-prompts">
+            <h3>✍️ تخصيص البرومبت والتوجيهات (Prompt Customization)</h3>
+            <div class="info-alert">تتيح لك هذه الإعدادات التحكم في توجيهات (Prompts) الذكاء الاصطناعي لتخصيص سلوك المعالجة والتشكيل:</div>
+            
+            <div class="form-group" style="margin-top: 15px;">
+              <label for="textarea-prompt-diacritize" style="font-weight: 700; font-size: 13px;">✏️ توجيه التشكيل التلقائي (Diacritization Prompt):</label>
+              <textarea id="textarea-prompt-diacritize" style="height: 60px; font-size: 12.5px; margin-top: 6px; width: 100%; box-sizing: border-box; padding: 8px;" placeholder="أدخل توجيه التشكيل هنا..."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+              <label for="textarea-prompt-grammar" style="font-weight: 700; font-size: 13px;">✍️ توجيه التدقيق الإملائي والنحوي (Grammar Correction Prompt):</label>
+              <textarea id="textarea-prompt-grammar" style="height: 60px; font-size: 12.5px; margin-top: 6px; width: 100%; box-sizing: border-box; padding: 8px;" placeholder="أدخل توجيه التدقيق هنا..."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+              <label for="textarea-prompt-translate" style="font-weight: 700; font-size: 13px;">🌐 توجيه الترجمة الفورية (Translation Prompt):</label>
+              <textarea id="textarea-prompt-translate" style="height: 60px; font-size: 12.5px; margin-top: 6px; width: 100%; box-sizing: border-box; padding: 8px;" placeholder="أدخل توجيه الترجمة هنا..."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+              <label for="textarea-prompt-summarize" style="font-weight: 700; font-size: 13px;">📝 توجيه التلخيص (Summarization Prompt):</label>
+              <textarea id="textarea-prompt-summarize" style="height: 60px; font-size: 12.5px; margin-top: 6px; width: 100%; box-sizing: border-box; padding: 8px;" placeholder="أدخل توجيه التلخيص هنا..."></textarea>
+            </div>
+
+            <button id="btn-reset-prompts" style="margin-top: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text); width: 100%; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 12.5px; transition: all 0.2s;">🔄 استعادة التوجيهات الافتراضية</button>
+          </div>
+          
+          <div class="card settings-panel" id="settings-security">
+            <h3>🔒 النسخ الاحتياطي والنسخ المشفر</h3>
+            <div class="info-alert">يمكنك تصدير كافة الإعدادات والبيانات والمفاتيح بشكل مشفر وآمن بكلمة مرور، أو استيرادها لاستعادتها لاحقاً:</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <!-- تصدير النسخة الاحتياطية -->
+              <div class="card" style="background: rgba(255,255,255,0.02); padding: 16px; border: 1px solid var(--border); border-radius: 8px;">
+                <h4 style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">📤 تصدير نسخة احتياطية مشفرة</h4>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">سيتم تشفير كامل إعداداتك ومفاتيح الـ API المدخلة باستخدام خوارزمية AES-256-GCM بكلمة المرور المحددة.</p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <input type="password" id="input-backup-export-password" placeholder="أدخل كلمة مرور لتشفير النسخة الاحتياطية..." style="width: 100%; padding: 8px 12px; font-size: 13px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);" />
+                  <button id="btn-export-backup" class="btn-activate-key" style="width: 100%; padding: 10px; font-weight: bold; background: var(--accent); color: white;">تصدير وحفظ الملف...</button>
+                </div>
+              </div>
+
+              <!-- استيراد النسخة الاحتياطية -->
+              <div class="card" style="background: rgba(255,255,255,0.02); padding: 16px; border: 1px solid var(--border); border-radius: 8px;">
+                <h4 style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">📥 استيراد نسخة احتياطية</h4>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">اختر ملف النسخة الاحتياطية المشفر وأدخل كلمة المرور لفك التشفير واستعادة كامل بياناتك.</p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <input type="file" id="input-backup-file-select" accept=".enc" style="display: none;" />
+                  <button id="btn-trigger-backup-file" class="shortcut-reset-btn" style="width: 100%; padding: 10px; font-size: 13px; border: 1px dashed var(--accent);">📁 اختر ملف النسخة الاحتياطية (.enc)</button>
+                  <div id="lbl-backup-file-name" style="font-size: 12.5px; color: var(--text-muted); text-align: center; display: none; margin-top: 5px;"></div>
+                  <input type="password" id="input-backup-import-password" placeholder="أدخل كلمة المرور لفك التشفير..." style="width: 100%; padding: 8px 12px; font-size: 13px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);" />
+                  <button id="btn-import-backup" class="btn-activate-key" style="width: 100%; padding: 10px; font-weight: bold; background: var(--success); color: white;">فك تشفير واستيراد...</button>
+                </div>
+              </div>
+
+              <!-- مفتش العناصر -->
+              <div class="card" style="background: rgba(255,255,255,0.02); padding: 16px; border: 1px solid var(--border); border-radius: 8px;">
+                <h4 style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">🔍 مفتش العناصر ( UI Element Picker )</h4>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">أداة تفاعلية تتيح لك النقر على أي عنصر داخل واجهة التطبيق وتظليله والحصول على معرّفه الفرعي ( CSS Selector ) لنسخه مباشرة.</p>
+                <button id="btn-activate-picker" class="shortcut-reset-btn" style="width: 100%; padding: 10px; font-size: 13px; border: 1px dashed var(--accent); color: var(--accent); cursor: pointer;">🔍 بدء تشغيل مفتش العناصر</button>
+              </div>
+
+              <!-- إعدادات وجهة الإدراج الذكي داخل التطبيق -->
+              <div class="card" style="background: rgba(255,255,255,0.02); padding: 16px; border: 1px solid var(--border); border-radius: 8px;">
+                <h4 style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">🎯 وجهة الإدراج التلقائي داخل التطبيق</h4>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">حدد صندوق النصوص المستهدف لإدراج النصوص فور تسجيلها أو معالجتها داخل واجهة المساعد.</p>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
+                  <input type="text" id="input-target-insertion-selector" readonly placeholder="الافتراضي: #result-text" style="flex: 1; padding: 8px 12px; font-size: 13px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);" />
+                  <button id="btn-pick-insertion-target" class="btn-activate-key" style="padding: 8px 12px; font-size: 12px; white-space: nowrap;">تعيين بالالتقاط 🔍</button>
+                </div>
+                <button id="btn-reset-insertion-target" class="shortcut-reset-btn" style="width: 100%; padding: 6px; font-size: 12px;">إعادة التعيين للافتراضي</button>
+              </div>
+            </div>
+          </div>
+            </div>
+          </div>
+        </section>

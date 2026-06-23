@@ -1,0 +1,141 @@
+        <section id="tab-stats" class="tab-pane">
+          <div class="panel-header">
+            <h2>📊 إحصائيات استهلاك التوكينز (Token Usage Stats)</h2>
+            <p class="subtitle">تتبع استهلاك الذكاء الاصطناعي والتكلفة التقديرية للعمليات بالتفصيل</p>
+          </div>
+          
+          <div class="stats-layout">
+            <!-- كروت الملخص الإحصائي -->
+            <div class="stats-summary-grid">
+              <div class="card stat-card">
+                <span class="stat-icon">🪙</span>
+                <div class="stat-details">
+                  <span class="stat-label">إجمالي التوكينز المستهلكة</span>
+                  <strong class="stat-value" id="stats-total-tokens">0</strong>
+                </div>
+              </div>
+              
+              <div class="card stat-card">
+                <span class="stat-icon">📥</span>
+                <div class="stat-details">
+                  <span class="stat-label">توكينز المدخلات (Prompt)</span>
+                  <strong class="stat-value" id="stats-prompt-tokens">0</strong>
+                </div>
+              </div>
+
+              <div class="card stat-card">
+                <span class="stat-icon">📤</span>
+                <div class="stat-details">
+                  <span class="stat-label">توكينز المخرجات (Completion)</span>
+                  <strong class="stat-value" id="stats-completion-tokens">0</strong>
+                </div>
+              </div>
+
+              <div class="card stat-card">
+                <span class="stat-icon">📝</span>
+                <div class="stat-details">
+                  <span class="stat-label">إجمالي الكلمات (محلي)</span>
+                  <strong class="stat-value" id="stats-total-words">0</strong>
+                </div>
+              </div>
+
+              <div class="card stat-card">
+                <span class="stat-icon">🔤</span>
+                <div class="stat-details">
+                  <span class="stat-label">إجمالي الحروف (محلي)</span>
+                  <strong class="stat-value" id="stats-total-chars">0</strong>
+                </div>
+              </div>
+
+              <div class="card stat-card">
+                <span class="stat-icon">⚡</span>
+                <div class="stat-details">
+                  <span class="stat-label">إجمالي الطلبات (العمليات)</span>
+                  <strong class="stat-value" id="stats-total-requests">0</strong>
+                </div>
+              </div>
+
+              <div class="card stat-card">
+                <span class="stat-icon">💰</span>
+                <div class="stat-details">
+                  <span class="stat-label">التكلفة التقديرية التقريبية</span>
+                  <strong class="stat-value" id="stats-approx-cost">$0.00000</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- تفصيل الاستهلاك حسب المزود والنموذج -->
+            <div class="stats-details-grid">
+              <!-- الاستهلاك حسب المزود -->
+              <div class="card">
+                <h3>🏢 الاستهلاك حسب المزودين</h3>
+                <div class="table-wrapper" style="overflow-x: auto;">
+                  <table style="width: 100%; border-collapse: collapse; text-align: right; font-size: 12.5px;">
+                    <thead>
+                      <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted);">
+                        <th style="padding: 10px 8px; text-align: right;">المزود</th>
+                        <th style="padding: 10px 8px; text-align: right;">الطلبات</th>
+                        <th style="padding: 10px 8px; text-align: right;">الكلمات</th>
+                        <th style="padding: 10px 8px; text-align: right;">الحروف</th>
+                        <th style="padding: 10px 8px; text-align: right;">التوكينز</th>
+                        <th style="padding: 10px 8px; text-align: right;">التكلفة</th>
+                      </tr>
+                    </thead>
+                    <tbody id="stats-providers-tbody">
+                      <!-- تعبأ ديناميكياً -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- الاستهلاك حسب النموذج -->
+              <div class="card">
+                <h3>🤖 الاستهلاك حسب النماذج</h3>
+                <div class="table-wrapper" style="overflow-x: auto;">
+                  <table style="width: 100%; border-collapse: collapse; text-align: right; font-size: 12.5px;">
+                    <thead>
+                      <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted);">
+                        <th style="padding: 10px 8px; text-align: right;">النموذج</th>
+                        <th style="padding: 10px 8px; text-align: right;">الطلبات</th>
+                        <th style="padding: 10px 8px; text-align: right;">الكلمات</th>
+                        <th style="padding: 10px 8px; text-align: right;">الحروف</th>
+                        <th style="padding: 10px 8px; text-align: right;">التوكينز</th>
+                        <th style="padding: 10px 8px; text-align: right;">التكلفة</th>
+                      </tr>
+                    </thead>
+                    <tbody id="stats-models-tbody">
+                      <!-- تعبأ ديناميكياً -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- سجل آخر العمليات وزر تصفير العداد -->
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h3>📜 سجل آخر 100 عملية</h3>
+                <button id="btn-reset-stats" class="danger-btn" style="background: rgba(220, 53, 69, 0.2); border: 1px solid var(--danger); color: #ff8888; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 12.5px; transition: background 0.2s;">
+                  🗑️ إعادة تعيين كافة الإحصائيات (تصفير العداد)
+                </button>
+              </div>
+              <div class="table-wrapper" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: right; font-size: 12.5px;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted);">
+                      <th style="padding: 10px 8px; text-align: right;">الوقت</th>
+                      <th style="padding: 10px 8px; text-align: right;">المزود</th>
+                      <th style="padding: 10px 8px; text-align: right;">النموذج</th>
+                      <th style="padding: 10px 8px; text-align: right;">العملية</th>
+                      <th style="padding: 10px 8px; text-align: right;">الكلمات/الحروف</th>
+                      <th style="padding: 10px 8px; text-align: right;">التوكينز</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stats-history-tbody">
+                    <!-- تعبأ ديناميكياً -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>

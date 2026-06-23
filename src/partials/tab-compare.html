@@ -1,0 +1,66 @@
+        <section id="tab-compare" class="tab-pane">
+          <div class="model-compare-workspace">
+            <div class="card model-compare-question-card">
+              <div class="mc-question-head">
+                <label for="textarea-compare-question" class="mc-question-title">
+                  <span class="mc-question-logo" aria-hidden="true">⚖️</span>
+                  <span class="mc-question-title-text">
+                    <strong>مقارنة النماذج</strong>
+                  </span>
+                </label>
+                <button id="btn-toggle-compare-question" class="mc-question-toggle mc-question-toggle-center" type="button" aria-expanded="true" title="فتح أو إغلاق صندوق النص" aria-label="فتح أو إغلاق صندوق النص">
+                  <span aria-hidden="true"></span>
+                </button>
+                <span class="mc-question-head-actions">
+                  <button id="btn-add-compare-image" class="mc-question-toggle" type="button" title="إضافة صور" aria-label="إضافة صور">
+                    <span class="mc-image-icon" aria-hidden="true"></span>
+                  </button>
+                  <button id="btn-add-compare-file" class="mc-question-toggle" type="button" title="إضافة ملفات" aria-label="إضافة ملفات">📎</button>
+                  <button id="btn-dictate-compare-question" class="mc-question-toggle" type="button" title="إملاء صوتي" aria-label="إملاء صوتي">🎙️</button>
+                  <button id="btn-lock-compare-question-size" class="mc-question-toggle" type="button" aria-pressed="false" title="تثبيت حجم صندوق النص" aria-label="تثبيت حجم صندوق النص">
+                    <svg class="mc-lock-icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+                  </button>
+                  <span class="mc-char-counter" id="mc-char-counter">0 حرف</span>
+                </span>
+              </div>
+              <input id="input-compare-images" type="file" accept="image/*" multiple hidden />
+              <input id="input-compare-files" type="file" multiple hidden />
+              <textarea id="textarea-compare-question" placeholder="اكتب سؤالك هنا… ثم اضغط Enter لإرساله إلى كل النماذج (Shift + Enter لسطر جديد)."></textarea>
+              <div id="compare-attachments" class="mc-attachments" hidden></div>
+              <div class="model-compare-actions">
+                <button id="btn-run-model-compare" class="mc-btn mc-btn-primary" type="button">
+                  <span class="mc-btn-ic" aria-hidden="true">▶</span> إرسال إلى الكل
+                </button>
+                <button id="btn-add-compare-column" class="mc-btn mc-btn-ghost" type="button">＋ إضافة نموذج</button>
+                <button id="btn-clear-compare" class="mc-btn mc-btn-ghost" type="button">🧹 مسح الإجابات</button>
+                <div id="hidden-columns-menu" class="mc-hidden-columns-menu" hidden>
+                  <button id="btn-show-hidden-columns" class="mc-btn mc-btn-ghost" type="button" aria-expanded="false">👁️ المخفية</button>
+                  <div id="hidden-columns-list" class="mc-hidden-columns-list" hidden></div>
+                </div>
+                <label class="mc-cols-control" title="طريقة عرض أعمدة المقارنة">
+                  <span>▦ العرض</span>
+                  <select id="mc-view-select">
+                    <option value="cards">بطاقات</option>
+                    <option value="table">جدول</option>
+                  </select>
+                </label>
+                <label class="mc-cols-control" title="عدد الأعمدة في كل صف؛ ما زاد يُعرض بتمرير أفقي">
+                  <span>📐 أعمدة الصف</span>
+                  <select id="mc-cols-select">
+                    <option value="auto">تلقائي</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                  </select>
+                </label>
+                <span class="mc-actions-spacer"></span>
+                <span id="model-compare-status" class="mc-status">اختر النماذج ثم اطرح سؤالك.</span>
+              </div>
+            </div>
+
+            <div id="model-compare-columns" class="model-compare-columns" aria-live="polite"></div>
+          </div>
+        </section>

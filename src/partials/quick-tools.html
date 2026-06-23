@@ -1,0 +1,40 @@
+    <div class="floating-text-menu" id="floating-menu" style="display:none;" role="toolbar" aria-label="إجراءات النص السريعة">
+      <div class="floating-menu-actions">
+        <button class="menu-btn" data-action="grammar" title="تدقيق إملائي ولغوي" aria-label="تدقيق إملائي ولغوي">✍️</button>
+        <button class="menu-btn" data-action="diacritize" title="تشكيل الحركات العربية" aria-label="تشكيل الحركات العربية">✏️</button>
+        <button class="menu-btn" data-action="translate" title="ترجمة فورية" aria-label="ترجمة فورية">🌐</button>
+        <button class="menu-btn" data-action="summarize" title="تلخيص النص" aria-label="تلخيص النص">📝</button>
+        <button class="menu-btn" data-action="speak" title="نطق النص" aria-label="نطق النص">🔊</button>
+      </div>
+      <div class="floating-menu-status" id="menu-status" aria-live="polite">حدد نصاً واضغط على أحد الإجراءات</div>
+    </div>
+
+    <div class="quick-action-dialog-backdrop" id="quick-action-dialog" hidden>
+      <section class="quick-action-dialog" role="dialog" aria-modal="true" aria-labelledby="quick-action-title">
+        <header class="quick-action-dialog-header">
+          <div>
+            <h3 id="quick-action-title">إجراء سريع</h3>
+            <p id="quick-action-subtitle">مراجعة نتيجة معالجة النص المحدد</p>
+          </div>
+          <button id="btn-close-quick-action" class="quick-action-close-btn" type="button" title="إغلاق" aria-label="إغلاق">×</button>
+        </header>
+        <div class="quick-action-dialog-body">
+          <label class="quick-action-field">
+            <span>النص المحدد</span>
+            <textarea id="quick-action-source" readonly></textarea>
+          </label>
+          <label class="quick-action-field">
+            <span>النتيجة</span>
+            <textarea id="quick-action-output"></textarea>
+          </label>
+        </div>
+        <footer class="quick-action-dialog-footer">
+          <span id="quick-action-status">جاهز</span>
+          <div class="quick-action-dialog-buttons">
+            <button id="btn-speak-quick-action" type="button" title="نطق النتيجة">🔊 نطق</button>
+            <button id="btn-copy-quick-action" type="button" title="نسخ النتيجة">📋 نسخ</button>
+            <button id="btn-insert-quick-action" type="button" title="لصق النتيجة في المكان النشط">↵ إدراج</button>
+          </div>
+        </footer>
+      </section>
+    </div>
